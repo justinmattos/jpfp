@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch?",
-    "start": "node server/index.js",
+    "seed": "node server/db/seed.js",
+    "start": "node server/db/seed.js && node server/index.js",
     "start:dev": "nodemon server/index.js",
     "build": "webpack",
     "build:dev": "webpack --watch --mode=development"

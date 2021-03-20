@@ -14,11 +14,7 @@ Campus.init(
     },
     imageURL: {
       type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notEmpty: true,
-      },
-      defaultValue: 'https://picsum.photos/id/237/200',
+      defaultValue: 'https://picsum.photos/id/870/200',
     },
     address: {
       type: DataTypes.STRING,
@@ -27,7 +23,7 @@ Campus.init(
         notEmpty: true,
       },
     },
-    detail: {
+    description: {
       type: DataTypes.TEXT,
       defaultValue: faker.lorem.paragraph,
     },

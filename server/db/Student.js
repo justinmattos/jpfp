@@ -9,19 +9,47 @@ const randomGPA = () => {
 class Student extends Model {}
 Student.init(
   {
-    name: {
+    firstName: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    fullName: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.firstName} ${this.lastName}`;
+      },
+      set() {
+        throw new Error('Do not set the "fullName" value!');
+      },
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+        isEmail: true,
+      },
+    },
     imageURL: {
       type: DataTypes.STRING,
-      defaultValue: faker.image.people,
+      defaultValue: 'https://picsum.photos/id/237/200',
     },
     GPA: {
-      type: DataTypes.STRING,
+      type: DataTypes.FLOAT,
+      validate: {
+        max: 4.0,
+        min: 0.0,
+      },
       defaultValue: randomGPA,
     },
   },

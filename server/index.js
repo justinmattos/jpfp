@@ -14,10 +14,4 @@ app.get('/', (req, res, next) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-const innit = () => {
-  syncAndSeed().then(() => {
-    app.listen(PORT, () => console.log(`App is now running on PORT: ${PORT}`));
-  });
-};
-
-innit();
+app.listen(PORT, () => console.log(`App is now running on PORT: ${PORT}`));

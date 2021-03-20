@@ -16,7 +16,7 @@ class CampusList extends Component {
         <ListNav page={page} maxPage={maxPage} />
         <div className="campus-list">
           {currList.map((campus) => {
-            return <CampusCard campus={campus} />;
+            return <CampusCard campus={campus} key={campus.id} />;
           })}
         </div>
         <ListNav page={page} maxPage={maxPage} />
