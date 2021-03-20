@@ -11,7 +11,7 @@ router.use(json({ strict: false }));
 
 //GET /api/students
 router.get('/', (req, res, next) => {
-  Student.findAll()
+  Student.findAll({ include: Campus, order: ['name'] })
     .then((data) => res.send(data))
     .catch(next);
 });

@@ -4,7 +4,8 @@ const StudentCard = ({ student }) => {
   return (
     <div className="student-card">
       <img src={student.imageURL} />
-      <p>{student.name}</p>
+      <h4>{student.name}</h4>
+      <h5>{student.campus.name}</h5>
     </div>
   );
 };

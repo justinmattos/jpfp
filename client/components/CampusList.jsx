@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchCampusList } from '../store/campusList';
 import ListNav from './ListNav.jsx';
+import CampusCard from './CampusCard.jsx';
 
 class CampusList extends Component {
   render() {
@@ -10,17 +11,14 @@ class CampusList extends Component {
     const currList = campusList.slice(page * 10, page * 10 + 10);
     const maxPage = Math.ceil(campusList.length / 10) - 1;
     return (
-      <div>
+      <div className="list-parent">
         <h2>Campus List</h2>
         <ListNav page={page} maxPage={maxPage} />
-        {currList.map((campus) => {
-          return (
-            <p key={campus.id}>
-              <img src={campus.imageURL}></img>
-              {campus.name}
-            </p>
-          );
-        })}
+        <div className="campus-list">
+          {currList.map((campus) => {
+            return <CampusCard campus={campus} />;
+          })}
+        </div>
         <ListNav page={page} maxPage={maxPage} />
       </div>
     );
