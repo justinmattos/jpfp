@@ -1,29 +1,24 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { connect } from 'react-redux';
+import { HashRouter as Router, Route } from 'react-router-dom';
+import MainNav from './MainNav.jsx';
+import CampusList from './CampusList.jsx';
+import StudentList from './StudentList.jsx';
 
 class App extends Component {
-  state = {
-    campusList: [],
-  };
-  componentDidMount() {
-    axios
-      .get('/api/campuses')
-      .then(({ data }) => {
-        this.setState({ campusList: data });
-      })
-      .catch(console.error);
-  }
   render() {
-    const { campusList } = this.state;
     return (
-      <div>
-        <h1>Campus Directory</h1>
-        {campusList.map((campus, idx) => (
-          <p key={idx}>{campus.name}</p>
-        ))}
-      </div>
+      <Router>
+        <div id="header">
+          <MainNav />
+        </div>
+        <div id="content">
+          <Route component={CampusList} path="/campusList/:page" />
+          <Route component={StudentList} path="/studentList/:page" />
+        </div>
+      </Router>
     );
   }
 }
 
-export default App;
+export default connect(null, null)(App);

@@ -8,6 +8,7 @@ Campus.hasMany(Student);
 
 const syncAndSeed = () => {
   return new Promise((res, rej) => {
+    let SEED = 1729;
     const seedCampus = Array(20)
       .fill('')
       .map((e) => {
@@ -16,9 +17,11 @@ const syncAndSeed = () => {
         const fakeAddress = faker.fake(
           `{{address.streetAddress}}\n${fakeCity}, {{address.stateAbbr}} {{address.zipCode}}`
         );
+        const fakeImageURL = `${faker.image.lorempicsum.image()}?random=${SEED++}`;
         return new Campus({
           name: fakeName,
           address: fakeAddress,
+          imageURL: fakeImageURL,
         });
       });
     db.sync({ force: true })
@@ -35,7 +38,8 @@ const syncAndSeed = () => {
                 const fakeName = faker.fake(
                   '{{name.firstName}} {{name.lastName}}'
                 );
-                return new Student({ name: fakeName });
+                const fakeImageURL = `${faker.image.lorempicsum.image()}?random=${SEED++}`;
+                return new Student({ name: fakeName, imageURL: fakeImageURL });
               });
             return Promise.all(
               seedStudents.map((student) => {
