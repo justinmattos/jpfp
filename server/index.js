@@ -1,5 +1,7 @@
+const faker = require('faker/locale/en_US');
 const express = require('express');
 const path = require('path');
+const { syncAndSeed } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,7 +14,9 @@ app.get('/', (req, res, next) => {
 });
 
 const innit = () => {
-  app.listen(PORT, () => console.log(`App is now running on PORT: ${PORT}`));
+  syncAndSeed().then(() => {
+    app.listen(PORT, () => console.log(`App is now running on PORT: ${PORT}`));
+  });
 };
 
 innit();
