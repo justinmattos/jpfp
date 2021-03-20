@@ -1,0 +1,38 @@
+{
+  "name": "JPFP",
+  "version": "1.0.0",
+  "description": "Final project for Fullstack Flex Immersive Junior Phase",
+  "main": "server/index.js",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch?",
+    "start": "node server/index.js",
+    "start:dev": "nodemon server/index.js",
+    "build": "webpack",
+    "build:dev": "webpack --watch"
+  },
+  "keywords": [],
+  "author": "Justin Mattos (justin.mattos@nyu.edu",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.5.1",
+    "sequelize": "^6.5.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/preset-env": "^7.13.10",
+    "@babel/preset-react": "^7.12.13",
+    "babel-jest": "^26.6.3",
+    "babel-loader": "^8.2.2",
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.7",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
+    "webpack": "^5.27.0",
+    "webpack-cli": "^4.5.0"
+  }
+}
