@@ -28,7 +28,7 @@ Campus.init(
       defaultValue: faker.lorem.paragraph,
     },
   },
-  { sequelize: db, modelName: 'campuses' }
+  { sequelize: db, modelName: 'campuses', timestamps: false }
 );
 
 module.exports = Campus;

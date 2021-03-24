@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { fetchStudentList } from '../store/studentList';
 import ListNav from './ListNav.jsx';
 import StudentCard from './StudentCard.jsx';
 
 class StudentList extends Component {
+  componentDidMount() {
+    this.props.fetchStudentList();
+  }
   render() {
     const { studentList } = this.props;
     const { page } = this.props.match.params;
@@ -20,7 +24,11 @@ class StudentList extends Component {
         <ListNav page={page} maxPage={maxPage} />
         <div className="student-list">
           {currList.map((student) => {
-            return <StudentCard key={student.id} student={student} />;
+            return (
+              <Link to={`./student/${student.id}`} key={student.id}>
+                <StudentCard student={student} />
+              </Link>
+            );
           })}
         </div>
         <ListNav page={page} maxPage={maxPage} />
@@ -31,12 +39,12 @@ class StudentList extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { studentList } = state;
-  return { studentList };
+  return { studentList, ...ownProps };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchStudentList: dispatch(fetchStudentList()),
+    fetchStudentList: () => dispatch(fetchStudentList()),
   };
 };
 

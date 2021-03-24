@@ -53,7 +53,7 @@ Student.init(
       defaultValue: randomGPA,
     },
   },
-  { sequelize: db, modelName: 'students' }
+  { sequelize: db, modelName: 'students', timestamps: false }
 );
 
 module.exports = Student;

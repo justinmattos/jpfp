@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import { HashRouter as Router, Route } from 'react-router-dom';
 import MainNav from './MainNav.jsx';
 import CampusList from './CampusList.jsx';
+import CampusDetail from './CampusDetail.jsx';
 import StudentList from './StudentList.jsx';
+import StudentDetail from './StudentDetail.jsx';
 
 class App extends Component {
   render() {
@@ -13,8 +15,10 @@ class App extends Component {
           <MainNav />
         </div>
         <div id="content">
-          <Route component={CampusList} path="/campusList/:page" />
-          <Route component={StudentList} path="/studentList/:page" />
+          <Route component={CampusList} path="/campusList/:page" exact />
+          <Route component={CampusDetail} path="/campusList/campus/:id/:page" />
+          <Route component={StudentList} path="/studentList/:page" exact />
+          <Route component={StudentDetail} path="/studentList/student/:id" />
         </div>
       </Router>
     );

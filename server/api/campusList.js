@@ -9,11 +9,28 @@ const router = Router();
 
 router.use(json({ strict: false }));
 
-//GET /api/campusList
+//GET /api/campusList/
 router.get('/', (req, res, next) => {
-  Campus.findAll({ include: Student, order: ['name'] })
+  Campus.findAll({
+    include: {
+      model: Student,
+      attributes: ['id'],
+    },
+    order: ['name'],
+    attributes: { exclude: ['address', 'description'] },
+  })
     .then((data) => res.send(data))
     .catch(next);
+});
+
+//GET /api/campusList/campus/:id
+router.get('/campus/:id', (req, res, next) => {
+  const { id } = req.params;
+  Campus.findByPk(id, {
+    include: Student,
+  })
+    .then((data) => res.send(data))
+    .catch(console.error);
 });
 
 module.exports = router;

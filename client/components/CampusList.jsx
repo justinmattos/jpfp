@@ -5,6 +5,9 @@ import ListNav from './ListNav.jsx';
 import CampusCard from './CampusCard.jsx';
 
 class CampusList extends Component {
+  componentDidMount() {
+    this.props.fetchCampusList();
+  }
   render() {
     const { campusList } = this.props;
     const { page } = this.props.match.params;
@@ -32,7 +35,7 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchCampusList: dispatch(fetchCampusList()),
+    fetchCampusList: () => dispatch(fetchCampusList()),
   };
 };
 
