@@ -36,7 +36,7 @@ class StudentDetail extends Component {
               ? 'This student is registered to a campus'
               : 'This student is not registered to a campus'}
           </div>
-          {campus ? <CampusCard campus={campus} /> : ''}
+          {campus ? <CampusCard campus={campus} student /> : ''}
           <div className="campus-select">
             <select>
               {campusList.map((campusOption) => {

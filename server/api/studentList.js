@@ -27,10 +27,6 @@ router.get('/:id', (req, res, next) => {
   Student.findByPk(id, {
     include: {
       model: Campus,
-      include: {
-        model: Student,
-        attributes: ['id'],
-      },
     },
   })
     .then((data) => res.send(data))

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const CampusCard = ({ campus }) => {
+const CampusCard = ({ campus, student }) => {
   const students = campus.students || '';
   return (
     <div className="campus-card-wrapper">
@@ -11,7 +11,7 @@ const CampusCard = ({ campus }) => {
           <div className="campus-card-detail">
             <div>
               <h4>{campus.name}</h4>
-              <h5>{students.length} Students</h5>
+              {student ? '' : <h5>{students.length} Students</h5>}
             </div>
             <div>
               <button>Edit</button>
