@@ -29,7 +29,7 @@ Student.init(
         return `${this.firstName} ${this.lastName}`;
       },
       set() {
-        throw new Error('Do not set the "fullName" value!');
+        throw new Error('Do not set the "fullName" value directly!');
       },
     },
     email: {

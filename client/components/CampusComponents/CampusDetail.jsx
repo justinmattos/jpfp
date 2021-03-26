@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCampusDetail } from '../store/campusDetail';
-import ListNav from './ListNav.jsx';
-import StudentCard from './StudentCard.jsx';
+import { fetchCampusDetail } from '../../store/campusDetail';
+import ListNav from '../NavComponents/ListNav.jsx';
+import StudentCard from '../StudentComponents/StudentCard.jsx';
 
 class CampusDetail extends Component {
   componentDidMount() {
@@ -22,7 +22,6 @@ class CampusDetail extends Component {
       page * listSize,
       page * listSize + listSize
     );
-    console.log(currList);
     const maxPage = Math.ceil(students.length / listSize) - 1;
     return (
       <div className="campus-detail">
@@ -42,11 +41,11 @@ class CampusDetail extends Component {
             <button>Delete</button>
           </div>
           <div>
-            {students
+            {students.length
               ? 'This campus has students'
               : 'This campus does not have any students'}
           </div>
-          {students ? (
+          {students.length ? (
             <div className="list-parent">
               <ListNav page={page} maxPage={maxPage} />
               <div className="student-list">

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setCampusDetail } from './campusDetail';
 
 const SET_CAMPUS_LIST = 'SET_CAMPUS_LIST';
 
@@ -14,6 +15,7 @@ export const fetchCampusList = () => {
     axios
       .get('/api/campusList')
       .then(({ data }) => {
+        dispatch(setCampusDetail({}));
         dispatch(setCampusList(data));
       })
       .catch(console.error);

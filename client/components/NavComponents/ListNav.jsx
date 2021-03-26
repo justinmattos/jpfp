@@ -11,7 +11,10 @@ const ListNav = ({ page, maxPage }) => {
             <Link to={`./${page * 1 - 1}`}>Previous</Link>
           </div>
         ) : (
-          ''
+          <div className="list-back inactive">
+            <a>First</a>
+            <a>Previous</a>
+          </div>
         )}
       </div>
       <div>
@@ -21,7 +24,10 @@ const ListNav = ({ page, maxPage }) => {
             <Link to={`./${page * 1 + 1}`}>Next</Link>
           </div>
         ) : (
-          ''
+          <div className="list-fwrd inactive">
+            <a>Last</a>
+            <a>Next</a>
+          </div>
         )}
       </div>
     </div>

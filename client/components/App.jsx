@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { HashRouter as Router, Route } from 'react-router-dom';
-import MainNav from './MainNav.jsx';
-import CampusList from './CampusList.jsx';
-import CampusDetail from './CampusDetail.jsx';
-import StudentList from './StudentList.jsx';
-import StudentDetail from './StudentDetail.jsx';
+import MainNav from './NavComponents/MainNav.jsx';
+import CampusList from './CampusComponents/CampusList.jsx';
+import CampusDetail from './CampusComponents/CampusDetail.jsx';
+import StudentList from './StudentComponents/StudentList.jsx';
+import StudentDetail from './StudentComponents/StudentDetail.jsx';
 
 class App extends Component {
   render() {

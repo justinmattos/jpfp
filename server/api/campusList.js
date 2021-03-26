@@ -9,7 +9,7 @@ const router = Router();
 
 router.use(json({ strict: false }));
 
-//GET /api/campusList/
+//GET /api/campusList
 router.get('/', (req, res, next) => {
   Campus.findAll({
     include: {
@@ -21,6 +21,15 @@ router.get('/', (req, res, next) => {
   })
     .then((data) => res.send(data))
     .catch(next);
+});
+
+//POST /api/campusList
+router.post('/', (req, res, next) => {
+  const campus = new Campus(req.body);
+  campus
+    .save()
+    .then(() => res.sendStatus(201))
+    .catch(console.error);
 });
 
 //GET /api/campusList/campus/:id

@@ -12,13 +12,15 @@ const syncAndSeed = () => {
       .map((e) => {
         const fakeCity = faker.address.city();
         const fakeName = `${fakeCity} University`;
-        const fakeAddress = faker.fake(
-          `{{address.streetAddress}}\n${fakeCity}, {{address.stateAbbr}} {{address.zipCode}}`
+        const fakeAddress1 = faker.address.streetAddress();
+        const fakeAddress2 = faker.fake(
+          `${fakeCity}, {{address.stateAbbr}} {{address.zipCode}}`
         );
         const fakeImageURL = `${faker.image.lorempicsum.image()}?random=${SEED++}`;
         return new Campus({
           name: fakeName,
-          address: fakeAddress,
+          address1: fakeAddress1,
+          address2: fakeAddress2,
           imageURL: fakeImageURL,
         });
       });

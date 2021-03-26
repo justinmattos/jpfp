@@ -16,11 +16,27 @@ Campus.init(
       type: DataTypes.STRING,
       defaultValue: 'https://picsum.photos/id/870/200',
     },
-    address: {
+    address1: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notEmpty: true,
+      },
+    },
+    address2: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    address: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return `${this.address1}\n${this.address2}`;
+      },
+      set() {
+        return new Error('Do not set the "address" value directly!');
       },
     },
     description: {

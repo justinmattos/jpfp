@@ -92,6 +92,10 @@ button {
   padding: 0 0 0 0.5em;
 }
 
+.inactive > a {
+  color: rgba(240, 248, 255, 0.5);
+}
+
 .campus-list {
   padding: 0.25em 0;
   display: flex;
@@ -120,6 +124,32 @@ button {
 
 .campus-card-detail button {
   width: calc(50% - 0.5em);
+}
+
+.campus-form {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.campus-form label {
+  margin: 0.5em 0.5em 0;
+  width: 100%;
+  display: flex;
+  justify-content: stretch;
+}
+
+.campus-form p {
+  margin: 0 0.5em 0 0;
+  text-align: end;
+  width: 100%;
+  flex: 1;
+}
+
+.campus-form input,
+textarea {
+  width: 100%;
+  flex: 4;
 }
 
 .student-list {
