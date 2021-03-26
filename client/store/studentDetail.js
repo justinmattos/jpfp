@@ -12,7 +12,7 @@ export const setStudentDetail = (student) => {
 export const fetchStudentDetail = (id) => {
   return (dispatch) => {
     axios
-      .get(`/api/studentList/${id}`)
+      .get(`/api/studentList/student/${id}`)
       .then(({ data }) => {
         dispatch(setStudentDetail(data));
       })

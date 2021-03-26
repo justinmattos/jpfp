@@ -126,27 +126,27 @@ button {
   width: calc(50% - 0.5em);
 }
 
-.campus-form {
+.form {
   display: flex;
   flex-flow: column;
   align-items: center;
 }
 
-.campus-form label {
+.form label {
   margin: 0.5em 0.5em 0;
   width: 100%;
   display: flex;
   justify-content: stretch;
 }
 
-.campus-form p {
+.form p {
   margin: 0 0.5em 0 0;
   text-align: end;
   width: 100%;
   flex: 1;
 }
 
-.campus-form input,
+.form input,
 textarea {
   width: 100%;
   flex: 4;

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchStudentList } from '../../store/studentList';
 import ListNav from '../NavComponents/ListNav.jsx';
+import StudentForm from './StudentForm.jsx';
 import StudentCard from './StudentCard.jsx';
 
 class StudentList extends Component {
@@ -40,6 +41,7 @@ class StudentList extends Component {
             <button>Add Student</button>
           </div>
         )}
+        <StudentForm />
       </div>
     );
   }

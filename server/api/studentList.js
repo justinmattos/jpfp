@@ -9,7 +9,7 @@ const router = Router();
 
 router.use(json({ strict: false }));
 
-//GET /api/students
+//GET /api/studentList
 router.get('/', (req, res, next) => {
   Student.findAll({
     include: { model: Campus, attributes: ['name'] },
@@ -22,7 +22,17 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
-router.get('/:id', (req, res, next) => {
+//POST /api/studentList
+router.post('/', (req, res, next) => {
+  const student = new Student(req.body);
+  student
+    .save()
+    .then(() => res.sendStatus(201))
+    .catch(next);
+});
+
+//GET /api/studentList/student/:id
+router.get('/student/:id', (req, res, next) => {
   const { id } = req.params;
   Student.findByPk(id, {
     include: {

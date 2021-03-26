@@ -29,7 +29,7 @@ router.post('/', (req, res, next) => {
   campus
     .save()
     .then(() => res.sendStatus(201))
-    .catch(console.error);
+    .catch(next);
 });
 
 //GET /api/campusList/campus/:id

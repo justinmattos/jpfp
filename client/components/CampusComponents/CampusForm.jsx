@@ -5,13 +5,16 @@ import addCampus from '../../store/addCampus';
 class CampusForm extends Component {
   formSubmitAddCampus = (ev) => {
     ev.preventDefault();
-    const newCampus = ['name', 'address', 'imageURL', 'description'].reduce(
-      (acc, val) => {
-        acc[val] = document.querySelector(`#${val}`).value;
-        return acc;
-      },
-      {}
-    );
+    const newCampus = [
+      'name',
+      'address1',
+      'address2',
+      'imageURL',
+      'description',
+    ].reduce((acc, val) => {
+      acc[val] = document.querySelector(`#${val}`).value;
+      return acc;
+    }, {});
     this.props.addCampus(newCampus);
   };
   render() {
@@ -21,18 +24,22 @@ class CampusForm extends Component {
     const imageURL = campusDetail.imageURL || '';
     const description = campusDetail.description || '';
     return (
-      <form className="campus-form" onSubmit={this.formSubmitAddCampus}>
+      <form className="form" onSubmit={this.formSubmitAddCampus}>
         <label htmlFor="name">
           <p>Campus Name:</p>
           <input id="name" type="text" defaultValue={name} />
         </label>
-        <label htmlFor="address">
-          <p>Campus Address:</p>
-          <input id="address" type="text" defaultValue={address}></input>
+        <label htmlFor="address1">
+          <p>Campus Address Line 1:</p>
+          <input id="address1" type="text" defaultValue={address}></input>
+        </label>
+        <label htmlFor="address2">
+          <p>Campus Address Line 2:</p>
+          <input id="address2" type="text" defaultValue={address}></input>
         </label>
         <label htmlFor="imageURL">
           <p>Campus Image URL:</p>
-          <input id="imageURL" type="URL" defaultValue={imageURL}></input>
+          <input id="imageURL" type="url" defaultValue={imageURL}></input>
         </label>
         <label htmlFor="description">
           <p>Campus Description:</p>
