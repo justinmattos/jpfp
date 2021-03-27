@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchCampusList } from '../../store/campus/campusList';
 import { fetchStudentDetail } from '../../store/student/studentDetail';
+import deleteStudent from '../../store/student/deleteStudent';
 import CampusCard from '../CampusComponents/CampusCard.jsx';
+import { Link } from 'react-router-dom';
 
 class StudentDetail extends Component {
   componentDidMount() {
@@ -11,7 +13,7 @@ class StudentDetail extends Component {
     this.props.fetchCampusList();
   }
   render() {
-    const { studentDetail } = this.props;
+    const { studentDetail, history, deleteStudent } = this.props;
     const fullName = studentDetail.fullName || 'Loading Student';
     const imageURL = studentDetail.imageURL || '';
     const GPA = studentDetail.GPA || '';
@@ -28,15 +30,23 @@ class StudentDetail extends Component {
             <p>GPA: {GPA}</p>
           </div>
           <div>
-            <button>Edit</button>
-            <button>Delete</button>
+            <Link to={`/studentList/student/${studentDetail.id}/edit`}>
+              <button>Edit</button>
+            </Link>
+            <button onClick={() => deleteStudent(studentDetail.id)}>
+              Delete
+            </button>
           </div>
           <div>
             {campus
               ? 'This student is registered to a campus'
               : 'This student is not registered to a campus'}
           </div>
-          {campus ? <CampusCard campus={campus} student /> : ''}
+          {campus ? (
+            <CampusCard campus={campus} history={history} student />
+          ) : (
+            ''
+          )}
           <div className="campus-select">
             <select>
               {campusList.map((campusOption) => {
@@ -57,13 +67,16 @@ class StudentDetail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { studentDetail, campusList } = state;
-  return { studentDetail, campusList };
+  const { history } = ownProps;
+  return { studentDetail, campusList, history };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const { history } = ownProps;
   return {
     fetchStudentDetail: (id) => dispatch(fetchStudentDetail(id)),
     fetchCampusList: () => dispatch(fetchCampusList()),
+    deleteStudent: (id) => dispatch(deleteStudent(id, history)),
   };
 };
 

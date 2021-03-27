@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCampusDetail } from '../../store/campus/campusDetail';
+import deleteCampus from '../../store/campus/deleteCampus';
 import ListNav from '../NavComponents/ListNav.jsx';
 import StudentCard from '../StudentComponents/StudentCard.jsx';
 
@@ -22,7 +23,7 @@ class CampusDetail extends Component {
     }
   }
   render() {
-    const { campusDetail, history } = this.props;
+    const { campusDetail, history, deleteCampus } = this.props;
     const name = campusDetail.name || 'Loading Campus . . . ';
     const imageURL = campusDetail.imageURL || '';
     const address = campusDetail.address || '';
@@ -52,31 +53,30 @@ class CampusDetail extends Component {
             <Link to={`/campusList/campus/${campusDetail.id}/edit`}>
               <button>Edit</button>
             </Link>
-            <button>Delete</button>
+            <button onClick={() => deleteCampus(campusDetail.id, history)}>
+              Delete
+            </button>
           </div>
           <div>
-            {students.length
-              ? 'This campus has students'
-              : 'This campus does not have any students'}
-          </div>
-          {students.length ? (
-            <div className="list-parent">
-              <ListNav page={page} maxPage={maxPage} />
-              <div className="student-list">
-                {currList.map((student) => (
-                  <StudentCard
-                    key={student.id}
-                    history={history}
-                    student={student}
-                    campus={campusDetail}
-                  />
-                ))}
+            {students.length ? (
+              <div className="list-parent">
+                <ListNav page={page} maxPage={maxPage} />
+                <div className="student-list">
+                  {currList.map((student) => (
+                    <StudentCard
+                      key={student.id}
+                      history={history}
+                      student={student}
+                      campus={campusDetail}
+                    />
+                  ))}
+                </div>
+                <ListNav page={page} maxPage={maxPage} />
               </div>
-              <ListNav page={page} maxPage={maxPage} />
-            </div>
-          ) : (
-            ''
-          )}
+            ) : (
+              'This campus does not have any students'
+            )}
+          </div>
         </div>
       </div>
     );
@@ -90,8 +90,10 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const { history } = ownProps;
   return {
     fetchCampusDetail: (id) => dispatch(fetchCampusDetail(id)),
+    deleteCampus: (id) => dispatch(deleteCampus(id, history)),
   };
 };
 

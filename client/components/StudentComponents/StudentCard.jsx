@@ -42,8 +42,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { history, campus } = ownProps;
   return {
     deleteStudent: (studentId) => {
-      dispatch(deleteStudent(studentId));
-      history.push('/studentList/0');
+      dispatch(deleteStudent(studentId, history));
     },
     deregisterStudent: (studentId) => {
       const { id: campusId } = campus;

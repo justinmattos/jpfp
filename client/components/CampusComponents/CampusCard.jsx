@@ -10,7 +10,7 @@ class CampusCard extends Component {
     }
   };
   render() {
-    const { campus, student, deleteCampus } = this.props;
+    const { campus, history, student, deleteCampus } = this.props;
     const students = campus.students || '';
     return (
       <div className="campus-card-wrapper" onClick={this.linkToCampus}>
@@ -19,10 +19,14 @@ class CampusCard extends Component {
           <div className="campus-card-detail">
             <div>
               <h4>{campus.name}</h4>
-              {student ? '' : <h5>{students.length} Students</h5>}
+              <h5>{students.length} Students</h5>
             </div>
             <div>
-              <button onClick={() => deleteCampus(campus.id)}>Delete</button>
+              {student ? (
+                ''
+              ) : (
+                <button onClick={() => deleteCampus(campus.id)}>Delete</button>
+              )}
             </div>
           </div>
         </div>
@@ -39,8 +43,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
     deleteCampus: (id) => {
-      history.push('/campusList/0');
-      dispatch(deleteCampus(id));
+      dispatch(deleteCampus(id, history));
     },
   };
 };

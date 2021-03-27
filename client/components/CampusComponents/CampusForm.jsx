@@ -83,12 +83,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
     addCampus: (newCampus) => {
-      dispatch(addCampus(newCampus));
-      history.push('/campusList/0');
+      dispatch(addCampus(newCampus, history));
     },
     editCampus: (updatedCampus, campusId) => {
-      dispatch(editCampus(updatedCampus, campusId));
-      history.push(`/campusList/campus/${campusId}/0`);
+      dispatch(editCampus(updatedCampus, campusId, history));
     },
     fetchCampusDetail: (id) => {
       dispatch(fetchCampusDetail(id));

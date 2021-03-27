@@ -16,7 +16,7 @@ router.get('/', (req, res, next) => {
     attributes: {
       exclude: ['email', 'GPA', 'campusId'],
     },
-    order: ['lastName'],
+    order: ['lastName', 'firstName'],
   })
     .then((data) => res.send(data))
     .catch(next);
@@ -55,9 +55,21 @@ router.get('/student/:id', (req, res, next) => {
   Student.findByPk(id, {
     include: {
       model: Campus,
+      include: { model: Student, attributes: ['id'] },
     },
   })
     .then((data) => res.send(data))
+    .catch(next);
+});
+
+//PUT /api/studentList/student/:id
+router.put('/student/:id', (req, res, next) => {
+  const { id } = req.params;
+  const updatedStudent = req.body;
+  Student.update(updatedStudent, { where: { id } })
+    .then(() => {
+      res.sendStatus(201);
+    })
     .catch(next);
 });
 

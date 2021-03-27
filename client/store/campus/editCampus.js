@@ -1,12 +1,11 @@
 import axios from 'axios';
-import { fetchCampusDetail } from './campusDetail';
 
-export default (updatedCampus, campusId) => {
+export default (updatedCampus, campusId, history) => {
   return (dispatch) => {
     axios
       .put(`/api/campusList/campus/${campusId}`, updatedCampus)
       .then(() => {
-        dispatch(fetchCampusDetail(campusId));
+        history.push(`/campusList/campus/${campusId}/0`);
       })
       .catch(console.error);
   };

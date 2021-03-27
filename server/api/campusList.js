@@ -50,10 +50,6 @@ router.put('/campus/:id', (req, res, next) => {
   const { id } = req.params;
   const updatedCampus = req.body;
   Campus.update(updatedCampus, { where: { id } })
-    // Campus.findByPk(id)
-    // .then((campus) => {
-    //   campus.update()
-    // })
     .then(() => {
       res.sendStatus(201);
     })

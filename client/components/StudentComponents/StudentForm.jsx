@@ -1,32 +1,47 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import addStudent from '../../store/student/addStudent';
+import editStudent from '../../store/student/editStudent'; //need to create this!
+import { fetchStudentDetail } from '../../store/student/studentDetail';
 
 class StudentForm extends Component {
-  formSubmitAddStudent = (ev) => {
-    ev.preventDefault();
-    const newStudent = [
-      'firstName',
-      'lastName',
-      'email',
-      'imageURL',
-      'GPA',
-    ].reduce((acc, val) => {
-      acc[val] = document.querySelector(`#${val}`).value;
-      return acc;
-    }, {});
-    this.props.addStudent(newStudent);
+  componentDidMount() {
+    const { id, editMode } = this.props;
+    if (editMode) {
+      this.props.fetchStudentDetail(id);
+    }
+  }
+
+  getFormValues = () => {
+    return ['firstName', 'lastName', 'email', 'imageURL', 'GPA'].reduce(
+      (acc, val) => {
+        acc[val] = document.querySelector(`#${val}`).value;
+        return acc;
+      },
+      {}
+    );
   };
+
+  formSubmit = (ev) => {
+    const { editMode, id } = this.props;
+    ev.preventDefault();
+    if (editMode) {
+      this.props.editStudent(this.getFormValues(), id);
+    } else {
+      this.props.addStudent(this.getFormValues());
+    }
+  };
+
   render() {
-    const { studentDetail } = this.props;
+    const { studentDetail, editMode } = this.props;
     const firstName = studentDetail.firstName || '';
     const lastName = studentDetail.lastName || '';
     const email = studentDetail.email || '';
     const imageURL = studentDetail.imageURL || '';
     const GPA = studentDetail.GPA || '';
     return (
-      <form className="student-form form" onSubmit={this.formSubmitAddStudent}>
-        <h2>Add a Student</h2>
+      <form className="student-form form" onSubmit={this.formSubmit}>
+        <h2>{editMode ? 'Edit' : 'Add a'} Student</h2>
         <label htmlFor="firstName">
           <p>Student First Name:</p>
           <input id="firstName" type="text" defaultValue={firstName} />
@@ -50,7 +65,7 @@ class StudentForm extends Component {
             type="number"
             min="0.00"
             max="4.00"
-            step="0.05"
+            step="0.01"
             defaultValue={GPA}
           />
         </label>
@@ -61,16 +76,23 @@ class StudentForm extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { id } = ownProps.match.params;
   const { studentDetail } = state;
-  return { studentDetail };
+  const editMode = !!id;
+  return { studentDetail, editMode, id };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
     addStudent: (newStudent) => {
-      history.push('/studentList/0');
-      dispatch(addStudent(newStudent));
+      dispatch(addStudent(newStudent, history));
+    },
+    editStudent: (updatedStudent, studentId) => {
+      dispatch(editStudent(updatedStudent, studentId, history));
+    },
+    fetchStudentDetail: (id) => {
+      dispatch(fetchStudentDetail(id));
     },
   };
 };
