@@ -5,9 +5,7 @@ export default (studentId) => {
   return (dispatch) => {
     axios
       .delete(`/api/studentList/student/${studentId}`)
-      .then(() => {
-        dispatch(fetchStudentList());
-      })
+      .then(() => dispatch(fetchStudentList()))
       .catch(console.error);
   };
 };

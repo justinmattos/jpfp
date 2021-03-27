@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCampusList } from '../../store/campusList';
-import { fetchStudentDetail } from '../../store/studentDetail';
+import { fetchCampusList } from '../../store/campus/campusList';
+import { fetchStudentDetail } from '../../store/student/studentDetail';
 import CampusCard from '../CampusComponents/CampusCard.jsx';
 
 class StudentDetail extends Component {

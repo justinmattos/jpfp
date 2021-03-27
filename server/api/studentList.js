@@ -31,6 +31,24 @@ router.post('/', (req, res, next) => {
     .catch(next);
 });
 
+//PUT /api/studentList/deregister/:id
+router.put('/deregister/:studentId/:campusId', (req, res, next) => {
+  const { studentId, campusId } = req.params;
+  console.log(studentId, campusId);
+  Campus.findByPk(campusId)
+    .then((campus) => {
+      return campus.removeStudent(studentId * 1);
+    })
+    .then(() => res.sendStatus(201))
+    .catch(next);
+  // Student.findByPk(id, { include: { model: Campus } })
+  //   .then((student) => {
+  //     return student.campus.removeStudent(student);
+  //   })
+  //   .then(() => res.sendStatus(201))
+  //   .catch(next);
+});
+
 //GET /api/studentList/student/:id
 router.get('/student/:id', (req, res, next) => {
   const { id } = req.params;

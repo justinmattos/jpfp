@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import addStudent from '../../store/addStudent';
+import addStudent from '../../store/student/addStudent';
 
 class StudentForm extends Component {
   formSubmitAddStudent = (ev) => {

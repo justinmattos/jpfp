@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchStudentList } from '../../store/studentList';
+import { fetchStudentList } from '../../store/student/studentList';
 import ListNav from '../NavComponents/ListNav.jsx';
 import StudentCard from './StudentCard.jsx';
 

@@ -1,11 +1,13 @@
 const faker = require('faker/locale/en_US');
 const express = require('express');
+const volleyball = require('volleyball');
 const path = require('path');
 const { syncAndSeed } = require('./db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.use(volleyball);
 app.use('/public', express.static('./public'));
 app.use('/dist', express.static('./dist'));
 app.use('/api', require('./api'));

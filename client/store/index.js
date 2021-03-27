@@ -1,10 +1,10 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
-import campusList from './campusList';
-import campusDetail from './campusDetail';
-import studentList from './studentList';
-import studentDetail from './studentDetail';
+import campusList from './campus/campusList';
+import campusDetail from './campus/campusDetail';
+import studentList from './student/studentList';
+import studentDetail from './student/studentDetail';
 
 const reducer = combineReducers({
   campusList,

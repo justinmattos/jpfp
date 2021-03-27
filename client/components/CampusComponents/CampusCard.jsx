@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import deleteCampus from '../../store/deleteCampus';
+import deleteCampus from '../../store/campus/deleteCampus';
 
 class CampusCard extends Component {
   linkToCampus = (ev) => {

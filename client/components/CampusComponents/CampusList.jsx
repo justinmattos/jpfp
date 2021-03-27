@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchCampusList } from '../../store/campusList';
+import { fetchCampusList } from '../../store/campus/campusList';
 import ListNav from '../NavComponents/ListNav.jsx';
-import CampusForm from './CampusForm.jsx';
 import CampusCard from './CampusCard.jsx';
 
 class CampusList extends Component {
@@ -46,7 +45,6 @@ class CampusList extends Component {
             <button>Add Campus</button>
           </div>
         )}
-        {/* <CampusForm /> */}
       </div>
     );
   }

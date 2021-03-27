@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import deleteStudent from '../../store/deleteStudent';
+import deleteStudent from '../../store/student/deleteStudent';
+import deregisterStudent from '../../store/student/deregisterStudent';
 
 class StudentCard extends Component {
   linkToStudent = (ev) => {
@@ -10,7 +11,7 @@ class StudentCard extends Component {
     }
   };
   render() {
-    const { student, campus, deleteStudent } = this.props;
+    const { student, campus, deleteStudent, deregisterStudent } = this.props;
     const campusName = student.campus ? student.campus.name : '';
     return (
       <div className="student-card-wrapper" onClick={this.linkToStudent}>
@@ -18,7 +19,15 @@ class StudentCard extends Component {
           <img src={student.imageURL} />
           <h4>{student.fullName}</h4>
           {campus ? '' : <h5>{campusName}</h5>}
-          <button onClick={() => deleteStudent(student.id)}>Delete</button>
+          <button
+            onClick={
+              campus
+                ? () => deregisterStudent(student.id)
+                : () => deleteStudent(student.id)
+            }
+          >
+            {campus ? 'Deregister' : 'Delete'}
+          </button>
         </div>
       </div>
     );
@@ -30,11 +39,15 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { history } = ownProps;
+  const { history, campus } = ownProps;
   return {
-    deleteStudent: (id) => {
+    deleteStudent: (studentId) => {
+      dispatch(deleteStudent(studentId));
       history.push('/studentList/0');
-      dispatch(deleteStudent(id));
+    },
+    deregisterStudent: (studentId) => {
+      const { id: campusId } = campus;
+      dispatch(deregisterStudent(studentId, campusId));
     },
   };
 };

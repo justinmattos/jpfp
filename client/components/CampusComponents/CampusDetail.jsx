@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCampusDetail } from '../../store/campusDetail';
+import { Link } from 'react-router-dom';
+import { fetchCampusDetail } from '../../store/campus/campusDetail';
 import ListNav from '../NavComponents/ListNav.jsx';
 import StudentCard from '../StudentComponents/StudentCard.jsx';
 
@@ -9,8 +10,19 @@ class CampusDetail extends Component {
     const { id } = this.props.match.params;
     this.props.fetchCampusDetail(id);
   }
-  render() {
+  componentDidUpdate({ campusDetail: prevCampusDetail }) {
+    const { id } = this.props.match.params;
     const { campusDetail } = this.props;
+    const check1 = campusDetail.students.length;
+    const check2 = prevCampusDetail.students
+      ? prevCampusDetail.students.length
+      : -1;
+    if (check1 !== check2) {
+      this.props.fetchCampusDetail(id);
+    }
+  }
+  render() {
+    const { campusDetail, history } = this.props;
     const name = campusDetail.name || 'Loading Campus . . . ';
     const imageURL = campusDetail.imageURL || '';
     const address = campusDetail.address || '';
@@ -37,7 +49,9 @@ class CampusDetail extends Component {
             <p className="campus-description">{description}</p>
           </div>
           <div>
-            <button>Edit</button>
+            <Link to={`/campusList/campus/${campusDetail.id}/edit`}>
+              <button>Edit</button>
+            </Link>
             <button>Delete</button>
           </div>
           <div>
@@ -50,7 +64,12 @@ class CampusDetail extends Component {
               <ListNav page={page} maxPage={maxPage} />
               <div className="student-list">
                 {currList.map((student) => (
-                  <StudentCard key={student.id} student={student} campus />
+                  <StudentCard
+                    key={student.id}
+                    history={history}
+                    student={student}
+                    campus={campusDetail}
+                  />
                 ))}
               </div>
               <ListNav page={page} maxPage={maxPage} />
@@ -65,8 +84,9 @@ class CampusDetail extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { campusDetail, studentList } = state;
-  return { campusDetail, studentList };
+  const { campusDetail } = state;
+  const { history } = ownProps;
+  return { campusDetail, history };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {

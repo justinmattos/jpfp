@@ -39,9 +39,25 @@ router.get('/campus/:id', (req, res, next) => {
     include: {
       model: Student,
     },
+    order: [[Student, 'lastName']],
   })
     .then((data) => res.send(data))
-    .catch(console.error);
+    .catch(next);
+});
+
+//PUT /api/campusList/campus/:id
+router.put('/campus/:id', (req, res, next) => {
+  const { id } = req.params;
+  const updatedCampus = req.body;
+  Campus.update(updatedCampus, { where: { id } })
+    // Campus.findByPk(id)
+    // .then((campus) => {
+    //   campus.update()
+    // })
+    .then(() => {
+      res.sendStatus(201);
+    })
+    .catch(next);
 });
 
 //DELETE /api/campusList/campus/:id
