@@ -190,6 +190,29 @@ textarea {
   justify-content: space-between;
 }
 
+.campus-detail {
+  padding: 0.5em 0;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.campus-detail-img {
+  margin: 0.25em;
+  box-sizing: border-box;
+  width: calc(50% - 0.5em);
+}
+
+.campus-detail-info {
+  margin: 0.25em;
+  width: calc(50% - 0.5em);
+  display: flex;
+  flex-flow: column nowrap;
+}
+
+.campus-detail-list {
+  width: 100%;
+}
+
 .student-detail {
   padding: 0.5em 0;
   display: flex;
@@ -221,6 +244,13 @@ textarea {
     align-items: center;
   }
   .student-detail > * {
+    width: calc(100% - 0.5em);
+  }
+  .campus-detail {
+    flex-flow: column nowrap;
+    align-items: center;
+  }
+  .campus-detail > * {
     width: calc(100% - 0.5em);
   }
 }

@@ -32,6 +32,12 @@ class App extends Component {
             <Route component={StudentDetail} path="/studentList/student/:id" />
             <Route component={StudentForm} path="/studentList/add" />
             <Route component={StudentList} path="/studentList/:page" exact />
+            <Route>
+              <div className="not-found">
+                <h2>Page Not Found</h2>
+                <p>Sorry, that page does not seem to exist . . .</p>
+              </div>
+            </Route>
           </Switch>
         </div>
       </Router>

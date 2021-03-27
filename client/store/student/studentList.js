@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { setStudentDetail } from './studentDetail';
 
 const SET_STUDENT_LIST = 'SET_STUDENT_LIST';
 
@@ -14,6 +15,7 @@ export const fetchStudentList = () => {
     axios
       .get('/api/studentList')
       .then(({ data }) => {
+        dispatch(setStudentDetail({}));
         dispatch(setStudentList(data));
       })
       .catch(console.error);

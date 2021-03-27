@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { fetchCampusList } from '../../store/campus/campusList';
 import addStudent from '../../store/student/addStudent';
-import editStudent from '../../store/student/editStudent'; //need to create this!
+import editStudent from '../../store/student/editStudent';
 import { fetchStudentDetail } from '../../store/student/studentDetail';
 
 class StudentForm extends Component {
@@ -9,17 +10,22 @@ class StudentForm extends Component {
     const { id, editMode } = this.props;
     if (editMode) {
       this.props.fetchStudentDetail(id);
+      this.props.fetchCampusList();
     }
   }
 
   getFormValues = () => {
-    return ['firstName', 'lastName', 'email', 'imageURL', 'GPA'].reduce(
-      (acc, val) => {
-        acc[val] = document.querySelector(`#${val}`).value;
-        return acc;
-      },
-      {}
-    );
+    return [
+      'firstName',
+      'lastName',
+      'email',
+      'imageURL',
+      'GPA',
+      'campusId',
+    ].reduce((acc, val) => {
+      acc[val] = document.querySelector(`#${val}`).value;
+      return acc;
+    }, {});
   };
 
   formSubmit = (ev) => {
@@ -33,12 +39,15 @@ class StudentForm extends Component {
   };
 
   render() {
-    const { studentDetail, editMode } = this.props;
+    const { studentDetail, campusList, editMode } = this.props;
+    console.log(studentDetail);
     const firstName = studentDetail.firstName || '';
     const lastName = studentDetail.lastName || '';
     const email = studentDetail.email || '';
     const imageURL = studentDetail.imageURL || '';
     const GPA = studentDetail.GPA || '';
+    const campus = studentDetail.campus || '';
+    console.log(!!campus);
     return (
       <form className="student-form form" onSubmit={this.formSubmit}>
         <h2>{editMode ? 'Edit' : 'Add a'} Student</h2>
@@ -69,6 +78,29 @@ class StudentForm extends Component {
             defaultValue={GPA}
           />
         </label>
+        <label htmlFor="campusId">
+          <p>Campus:</p>
+          <select id="campusId">
+            {!!campus ? (
+              ''
+            ) : (
+              <option key="0" value={null} selected>
+                -- Select a Campus (not required) --
+              </option>
+            )}
+            {campusList.map((campusOption) => {
+              return (
+                <option
+                  key={campusOption.id}
+                  value={campusOption.id}
+                  selected={campusOption.id === campus.id ? true : false}
+                >
+                  {campusOption.name}
+                </option>
+              );
+            })}
+          </select>
+        </label>
         <button>Submit</button>
       </form>
     );
@@ -77,9 +109,9 @@ class StudentForm extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { id } = ownProps.match.params;
-  const { studentDetail } = state;
+  const { studentDetail, campusList } = state;
   const editMode = !!id;
-  return { studentDetail, editMode, id };
+  return { studentDetail, campusList, editMode, id };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -93,6 +125,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     },
     fetchStudentDetail: (id) => {
       dispatch(fetchStudentDetail(id));
+    },
+    fetchCampusList: () => {
+      dispatch(fetchCampusList());
     },
   };
 };
