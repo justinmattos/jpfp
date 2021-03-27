@@ -6,15 +6,14 @@ class CampusCard extends Component {
   linkToCampus = (ev) => {
     const { campus, history } = this.props;
     if (ev.target.tagName !== 'BUTTON') {
-      history.push(`/campusList/campus/${campus.id}`);
+      history.push(`/campusList/campus/${campus.id}/0`);
     }
   };
   render() {
     const { campus, student, deleteCampus } = this.props;
     const students = campus.students || '';
     return (
-      <div className="campus-card-wrapper">
-        {/* <Link to={`/campusList/campus/${campus.id}/0`}> */}
+      <div className="campus-card-wrapper" onClick={this.linkToCampus}>
         <div className="campus-card">
           <img src={campus.imageURL} />
           <div className="campus-card-detail">
@@ -27,7 +26,6 @@ class CampusCard extends Component {
             </div>
           </div>
         </div>
-        {/* </Link> */}
       </div>
     );
   }
