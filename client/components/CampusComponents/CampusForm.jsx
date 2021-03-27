@@ -25,6 +25,7 @@ class CampusForm extends Component {
     const description = campusDetail.description || '';
     return (
       <form className="form" onSubmit={this.formSubmitAddCampus}>
+        <h2>Add a Campus</h2>
         <label htmlFor="name">
           <p>Campus Name:</p>
           <input id="name" type="text" defaultValue={name} />
@@ -61,8 +62,12 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const { history } = ownProps;
   return {
-    addCampus: (newCampus) => dispatch(addCampus(newCampus)),
+    addCampus: (newCampus) => {
+      history.push('/campusList/0');
+      dispatch(addCampus(newCampus));
+    },
   };
 };
 

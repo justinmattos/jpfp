@@ -1,11 +1,20 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import deleteCampus from '../../store/deleteCampus';
 
-const CampusCard = ({ campus, student }) => {
-  const students = campus.students || '';
-  return (
-    <div className="campus-card-wrapper">
-      <Link to={`/campusList/campus/${campus.id}/0`}>
+class CampusCard extends Component {
+  linkToCampus = (ev) => {
+    const { campus, history } = this.props;
+    if (ev.target.tagName !== 'BUTTON') {
+      history.push(`/campusList/campus/${campus.id}`);
+    }
+  };
+  render() {
+    const { campus, student, deleteCampus } = this.props;
+    const students = campus.students || '';
+    return (
+      <div className="campus-card-wrapper">
+        {/* <Link to={`/campusList/campus/${campus.id}/0`}> */}
         <div className="campus-card">
           <img src={campus.imageURL} />
           <div className="campus-card-detail">
@@ -14,14 +23,28 @@ const CampusCard = ({ campus, student }) => {
               {student ? '' : <h5>{students.length} Students</h5>}
             </div>
             <div>
-              <button>Edit</button>
-              <button>Delete</button>
+              <button onClick={() => deleteCampus(campus.id)}>Delete</button>
             </div>
           </div>
         </div>
-      </Link>
-    </div>
-  );
+        {/* </Link> */}
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = (state, ownProps) => {
+  return { ...ownProps };
 };
 
-export default CampusCard;
+const mapDispatchToProps = (dispatch, ownProps) => {
+  const { history } = ownProps;
+  return {
+    deleteCampus: (id) => {
+      history.push('/campusList/0');
+      dispatch(deleteCampus(id));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CampusCard);

@@ -44,4 +44,15 @@ router.get('/campus/:id', (req, res, next) => {
     .catch(console.error);
 });
 
+//DELETE /api/campusList/campus/:id
+router.delete('/campus/:id', (req, res, next) => {
+  const { id } = req.params;
+  Campus.findByPk(id)
+    .then((campus) => {
+      return campus.destroy();
+    })
+    .then(() => res.sendStatus(200))
+    .catch(next);
+});
+
 module.exports = router;

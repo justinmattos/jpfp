@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchStudentList } from '../../store/studentList';
 import ListNav from '../NavComponents/ListNav.jsx';
-import StudentForm from './StudentForm.jsx';
 import StudentCard from './StudentCard.jsx';
 
 class StudentList extends Component {
@@ -11,7 +10,7 @@ class StudentList extends Component {
     this.props.fetchStudentList();
   }
   render() {
-    const { studentList } = this.props;
+    const { studentList, history } = this.props;
     const { page } = this.props.match.params;
     const listSize = 20;
     const currList = studentList.slice(
@@ -24,12 +23,19 @@ class StudentList extends Component {
         {studentList.length ? (
           <div className="list-parent">
             <h2>
-              Student List <button>Add Student</button>
+              Student List
+              <Link to="./add">
+                <button>Add Student</button>
+              </Link>
             </h2>
             <ListNav page={page} maxPage={maxPage} />
             <div className="student-list">
               {currList.map((student) => (
-                <StudentCard student={student} key={student.id} />
+                <StudentCard
+                  student={student}
+                  history={history}
+                  key={student.id}
+                />
               ))}
             </div>
             <ListNav page={page} maxPage={maxPage} />
@@ -41,7 +47,6 @@ class StudentList extends Component {
             <button>Add Student</button>
           </div>
         )}
-        <StudentForm />
       </div>
     );
   }

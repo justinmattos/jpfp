@@ -26,6 +26,7 @@ class StudentForm extends Component {
     const GPA = studentDetail.GPA || '';
     return (
       <form className="student-form form" onSubmit={this.formSubmitAddStudent}>
+        <h2>Add a Student</h2>
         <label htmlFor="firstName">
           <p>Student First Name:</p>
           <input id="firstName" type="text" defaultValue={firstName} />
@@ -65,8 +66,12 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
+  const { history } = ownProps;
   return {
-    addStudent: (newStudent) => dispatch(addStudent(newStudent)),
+    addStudent: (newStudent) => {
+      history.push('/studentList/0');
+      dispatch(addStudent(newStudent));
+    },
   };
 };
 

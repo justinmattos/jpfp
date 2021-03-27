@@ -43,4 +43,15 @@ router.get('/student/:id', (req, res, next) => {
     .catch(next);
 });
 
+//DELETE /api/studentList/student/:id
+router.delete('/student/:id', (req, res, next) => {
+  const { id } = req.params;
+  Student.findByPk(id)
+    .then((student) => {
+      return student.destroy();
+    })
+    .then(() => res.sendStatus(200))
+    .catch(next);
+});
+
 module.exports = router;

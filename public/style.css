@@ -61,6 +61,16 @@ button {
 
 .list-parent > h2 {
   padding: 0.5em 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.list-parent > h2 button {
+  margin: 0;
+  padding: 0.5em;
+  font-size: 1rem;
 }
 
 .list-nav {
@@ -122,8 +132,13 @@ button {
   flex-flow: column nowrap;
 }
 
-.campus-card-detail button {
+.campus-card-detail div:last-child {
   width: calc(50% - 0.5em);
+  align-self: flex-end;
+}
+
+.campus-card-detail button {
+  width: calc(100% - 0.5em);
 }
 
 .form {
@@ -173,7 +188,6 @@ textarea {
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
-  height: 170px;
 }
 
 .student-detail {
