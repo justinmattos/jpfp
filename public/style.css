@@ -3,35 +3,42 @@
   padding: 0;
 }
 
+:root {
+  --main-bg-color: #093145;
+  --second-bg-color: #107896;
+  --card-bg-color: #9a2617;
+}
+
 body {
   margin: 0.5em;
-  background-color: rgba(55, 95, 125, 0.8);
+  background-color: var(--main-bg-color);
   font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande',
     'Lucida Sans', Arial, sans-serif;
-  color: aliceblue;
+  color: white;
 }
 
 body a {
-  color: aliceblue;
   text-decoration: none;
 }
 
 img {
   width: 150px;
-  border: solid rgb(55, 95, 125) 2px;
+  border-radius: 0.25em;
 }
 
 button {
-  background-color: rgb(55, 95, 125);
-  color: aliceblue;
-  padding: 0.25em;
+  background-color: var(--second-bg-color);
+  color: white;
+  padding: 0.5em;
   margin: 0.25em;
   border: none;
+  border-radius: 0.5em;
 }
 
 #main-nav {
-  padding: 0.5em;
-  background-color: rgb(55, 95, 125);
+  padding: 1em;
+  background-color: var(--second-bg-color);
+  border-radius: 1em;
   display: flex;
 }
 
@@ -40,7 +47,7 @@ button {
 }
 
 #main-nav a {
-  color: aliceblue;
+  color: white;
 }
 
 #main-nav > div {
@@ -75,14 +82,15 @@ button {
 
 .list-nav {
   padding: 0.5em;
-  background-color: rgb(55, 95, 125);
+  background-color: var(--second-bg-color);
   display: flex;
   justify-content: space-between;
   width: calc(100% - 1em);
+  border-radius: 0.5em;
 }
 
 .list-nav a {
-  color: aliceblue;
+  color: white;
 }
 
 .list-nav > div {
@@ -103,7 +111,7 @@ button {
 }
 
 .inactive > a {
-  color: rgba(240, 248, 255, 0.5);
+  color: var(--main-bg-color);
 }
 
 .campus-list {
@@ -113,10 +121,16 @@ button {
 }
 
 .campus-card-wrapper {
-  background-color: rgb(125, 55, 77);
-  margin: 0.25em;
-  padding: 0.25em;
+  background-color: var(--card-bg-color);
+  box-sizing: border-box;
+  margin: 0.5em;
+  padding: 0.5em;
+  border-radius: 0.5em;
   width: calc(50% - 1em);
+}
+
+.campus-card-wrapper:hover {
+  cursor: pointer;
 }
 
 .campus-card {
@@ -133,7 +147,6 @@ button {
 }
 
 .campus-card-detail div:last-child {
-  width: calc(50% - 0.5em);
   align-self: flex-end;
 }
 
@@ -162,32 +175,47 @@ button {
 }
 
 .form input,
-textarea {
+.form textarea,
+.form select {
   width: 100%;
   flex: 4;
+}
+
+.invalid {
+  color: #76323f;
+  text-decoration: bold;
+}
+
+.invalid input,
+.invalid textarea,
+.invalid select {
+  border: #76323f solid 3px;
 }
 
 .student-list {
   padding: 0.5em 0;
   display: grid;
-  grid-template-columns:
-    calc(154px + 1em)
-    calc(154px + 1em)
-    calc(154px + 1em)
-    calc(154px + 1em)
-    calc(154px + 1em);
+  grid-template-columns: auto auto auto auto auto;
   grid-template-rows: max-content;
-  grid-auto-columns: calc(154px + 1em);
+  grid-auto-columns: calc(150px + 1em);
 }
 
 .student-card {
-  background-color: rgb(125, 55, 77);
-  margin: 0.25em;
-  padding: 0.25em;
-  width: calc(154px);
+  background-color: var(--card-bg-color);
+  margin: 0.5em;
+  padding: 0.5em;
+  border-radius: 0.5em;
+  width: calc(150px + 0.5em);
   display: flex;
   flex-flow: column nowrap;
   justify-content: space-between;
+  align-items: center;
+}
+
+h4,
+h5 {
+  text-align: center;
+  padding: 0.25em 0;
 }
 
 .campus-detail {
@@ -255,22 +283,15 @@ textarea {
   }
 }
 
-@media (max-width: 846px) {
+@media (max-width: 956px) {
   .student-list {
-    grid-template-columns:
-      calc(154px + 1em)
-      calc(154px + 1em)
-      calc(154px + 1em)
-      calc(154px + 1em);
+    grid-template-columns: auto auto auto auto;
   }
 }
 
-@media (max-width: 680px) {
+@media (max-width: 760px) {
   .student-list {
-    grid-template-columns:
-      calc(154px + 1em)
-      calc(154px + 1em)
-      calc(154px + 1em);
+    grid-template-columns: auto auto auto;
   }
   .campus-card {
     flex-flow: column nowrap;
@@ -284,17 +305,14 @@ textarea {
     flex-flow: column nowrap;
     align-items: center;
   }
-  .campus-card-detail button {
-    margin: 0 0 0.5em;
-    width: calc(100% - 0.5em);
+  .campus-card-detail div:last-child {
+    align-self: center;
   }
 }
 
-@media (max-width: 514px) {
+@media (max-width: 572px) {
   .student-list {
-    grid-template-columns:
-      calc(154px + 1em)
-      calc(154px + 1em);
+    grid-template-columns: auto auto;
   }
 }
 
@@ -304,8 +322,8 @@ textarea {
   }
 }
 
-@media (max-width: 348px) {
+@media (max-width: 382px) {
   .student-list {
-    grid-template-columns: calc(154px + 1em);
+    grid-template-columns: auto;
   }
 }

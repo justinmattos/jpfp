@@ -13,12 +13,13 @@ class StudentCard extends Component {
   render() {
     const { student, campus, deleteStudent, deregisterStudent } = this.props;
     const campusName = student.campus ? student.campus.name : '';
+    const GPA = student.GPA || '';
     return (
       <div className="student-card-wrapper" onClick={this.linkToStudent}>
         <div className="student-card">
           <img src={student.imageURL} />
           <h4>{student.fullName}</h4>
-          {campus ? '' : <h5>{campusName}</h5>}
+          {campus ? <h5>GPA: {GPA}</h5> : <h5>{campusName}</h5>}
           <button
             onClick={
               campus

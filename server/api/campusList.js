@@ -32,14 +32,14 @@ router.post('/', (req, res, next) => {
     .catch(next);
 });
 
-//GET /api/campusList/campus/:id
-router.get('/campus/:id', (req, res, next) => {
-  const { id } = req.params;
+//GET /api/campusList/campus/:id/:sortStudentsBy
+router.get('/campus/:id/:sortStudentsBy', (req, res, next) => {
+  const { id, sortStudentsBy } = req.params;
   Campus.findByPk(id, {
     include: {
       model: Student,
     },
-    order: [[Student, 'lastName']],
+    order: [[Student, sortStudentsBy]],
   })
     .then((data) => res.send(data))
     .catch(next);

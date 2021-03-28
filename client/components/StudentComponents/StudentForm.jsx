@@ -10,12 +10,13 @@ class StudentForm extends Component {
     const { id, editMode } = this.props;
     if (editMode) {
       this.props.fetchStudentDetail(id);
-      this.props.fetchCampusList();
     }
+    this.props.fetchCampusList();
   }
 
   getFormValues = () => {
-    return [
+    let validForm = true;
+    const formData = [
       'firstName',
       'lastName',
       'email',
@@ -23,18 +24,35 @@ class StudentForm extends Component {
       'GPA',
       'campusId',
     ].reduce((acc, val) => {
-      acc[val] = document.querySelector(`#${val}`).value;
+      const currEl = document.querySelector(`#${val}`);
+      if (!currEl.value) {
+        console.log(currEl);
+        currEl.parentNode.className = 'invalid';
+        validForm = false;
+      } else {
+        acc[val] = currEl.value;
+      }
       return acc;
     }, {});
+    if (validForm) {
+      return formData;
+    } else {
+      return validForm;
+    }
   };
 
   formSubmit = (ev) => {
     const { editMode, id } = this.props;
     ev.preventDefault();
-    if (editMode) {
-      this.props.editStudent(this.getFormValues(), id);
+    const formData = this.getFormValues();
+    if (formData) {
+      if (editMode) {
+        this.props.editStudent(formData, id);
+      } else {
+        this.props.addStudent(formData);
+      }
     } else {
-      this.props.addStudent(this.getFormValues());
+      alert('Please fill all required fields');
     }
   };
 

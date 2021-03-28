@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCampusDetail } from '../../store/campus/campusDetail';
 import deleteCampus from '../../store/campus/deleteCampus';
+import { fetchStudentList } from '../../store/student/studentList';
 import ListNav from '../NavComponents/ListNav.jsx';
 import StudentCard from '../StudentComponents/StudentCard.jsx';
 
@@ -10,6 +11,7 @@ class CampusDetail extends Component {
   componentDidMount() {
     const { id } = this.props;
     this.props.fetchCampusDetail(id);
+    document.querySelector('.filter-select');
   }
   componentDidUpdate({ campusDetail: prevCampusDetail, id: prevId }) {
     const { id, campusDetail } = this.props;
@@ -21,9 +23,15 @@ class CampusDetail extends Component {
       this.props.fetchCampusDetail(id);
     }
   }
+  sortStudents = () => {};
   render() {
-    const { campusDetail, history, deleteCampus } = this.props;
-    console.log(campusDetail);
+    const {
+      campusDetail,
+      history,
+      deleteCampus,
+      fetchCampusDetail,
+      id: campusId,
+    } = this.props;
     const name = campusDetail.name || 'Loading Campus . . . ';
     const imageURL = campusDetail.imageURL || '';
     const address = campusDetail.address || '';
@@ -66,6 +74,12 @@ class CampusDetail extends Component {
                   Delete
                 </button>
               </div>
+              <div>
+                <label htmlFor="student-sort">
+                  Sort Students By:
+                  <select></select> {/* Maybe two buttons would be better */}
+                </label>
+              </div>
             </div>
             <div className="campus-detail-list">
               {students.length ? (
@@ -104,7 +118,8 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
-    fetchCampusDetail: (id) => dispatch(fetchCampusDetail(id)),
+    fetchCampusDetail: (id, sortStudentsBy = 'lastName') =>
+      dispatch(fetchCampusDetail(id, sortStudentsBy)),
     deleteCampus: (id) => dispatch(deleteCampus(id, history)),
   };
 };
