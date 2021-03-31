@@ -10,10 +10,10 @@ export const setCampusList = (campusList) => {
   };
 };
 
-export const fetchCampusList = () => {
+export const fetchCampusList = ({ page, size, sort }) => {
   return (dispatch) => {
     axios
-      .get('/api/campus')
+      .get(`/api/campus/${page}/${size}/${sort}`)
       .then(({ data }) => {
         dispatch(setCampusDetail({}));
         dispatch(setCampusList(data));

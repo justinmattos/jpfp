@@ -9,27 +9,36 @@ const router = Router();
 
 router.use(json({ strict: false }));
 
-//GET /api/campus
-router.get('/', (req, res, next) => {
-  let campusList = [];
-  Campus.findAll({
-    order: ['name'],
-    attributes: { exclude: ['address', 'description'] },
-  })
+//GET /api/campus/:page/:size/:sort
+router.get('/:page/:size/:sort', (req, res, next) => {
+  const { page, size, sort } = req.params;
+  const offset = page * size - size,
+    limit = size;
+  let currentList = [],
+    maxPage = 0;
+  Campus.count()
+    .then((numberOfCampuses) => {
+      maxPage = Math.ceil(numberOfCampuses / size);
+      return Campus.findAll({
+        order: [sort],
+        attributes: { exclude: ['address', 'description'] },
+        offset,
+        limit,
+      });
+    })
     .then((data) => {
-      campusList = data;
+      currentList = data;
       return Promise.all(
-        campusList.map(({ campusId }) => {
+        currentList.map(({ campusId }) => {
           return Student.count({ where: { campusId } });
         })
       );
     })
     .then((data) => {
-      console.log(data);
       data.forEach((val, idx) => {
-        campusList[idx] = { ...campusList[idx].dataValues, students: val };
+        currentList[idx] = { ...currentList[idx].dataValues, students: val };
       });
-      res.send(campusList);
+      res.send({ currentList, maxPage });
     })
     .catch(next);
 });

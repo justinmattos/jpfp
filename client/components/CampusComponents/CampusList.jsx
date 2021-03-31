@@ -1,22 +1,57 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { fetchCampusList } from '../../store/campus/campusList';
+import campusList, { fetchCampusList } from '../../store/campus/campusList';
 import ListNav from '../NavComponents/ListNav.jsx';
 import CampusCard from './CampusCard.jsx';
 
 class CampusList extends Component {
   componentDidMount() {
-    this.props.fetchCampusList();
+    const { page, size, sort } = this.props;
+    this.props.fetchCampusList({ page, size, sort });
   }
+  componentDidUpdate({ page: prevPage }) {
+    const { page, size, sort } = this.props;
+    if (prevPage !== page) {
+      this.props.fetchCampusList({ page, size, sort });
+    }
+  }
+  prevPage = () => {
+    const { page } = this.props;
+    this.goToPage(page * 1 - 1);
+  };
+  nextPage = () => {
+    const { page } = this.props;
+    this.goToPage(page * 1 + 1);
+  };
+  goToPage = (newPage) => {
+    const { size, sort, history } = this.props;
+    history.push(`/campus/all/${newPage}/${size}/${sort}`);
+  };
+  sortFunc = (sortType) => {};
   render() {
-    const { campusList, history } = this.props;
-    const { page } = this.props.match.params;
-    const currList = campusList.slice(page * 10, page * 10 + 10);
-    const maxPage = Math.ceil(campusList.length / 10) - 1;
+    const {
+      campusList: { currentList, maxPage },
+      history,
+      page,
+    } = this.props;
+    const CampusListNav = () => {
+      return (
+        <ListNav
+          page={page}
+          maxPage={maxPage}
+          nextPage={this.nextPage}
+          prevPage={this.prevPage}
+          goToPage={this.goToPage}
+          sortFunc={this.sortFunc}
+          sortType1="Name"
+          sortType2="Students"
+        />
+      );
+    };
     return (
       <div>
-        {campusList.length ? (
+        {currentList ? (
           <div className="list-parent">
             <h2>
               Campus List
@@ -24,19 +59,19 @@ class CampusList extends Component {
                 <button>Add Campus</button>
               </Link>
             </h2>
-            <ListNav page={page} maxPage={maxPage} />
+            <CampusListNav />
             <div className="campus-list">
-              {currList.map((campus) => {
+              {currentList.map((campus) => {
                 return (
                   <CampusCard
                     campus={campus}
                     history={history}
-                    key={campus.id}
+                    key={campus.campusId}
                   />
                 );
               })}
             </div>
-            <ListNav page={page} maxPage={maxPage} />
+            <CampusListNav />
           </div>
         ) : (
           <div>
@@ -53,12 +88,14 @@ class CampusList extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { campusList } = state;
   const { history } = ownProps;
-  return { campusList, history };
+  const { page, size, sort } = ownProps.match.params;
+  return { campusList, history, page, size, sort };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   return {
-    fetchCampusList: () => dispatch(fetchCampusList()),
+    fetchCampusList: ({ page, size, sort }) =>
+      dispatch(fetchCampusList({ page, size, sort })),
   };
 };
 

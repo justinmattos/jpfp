@@ -1,14 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const ListNav = ({ page, maxPage }) => {
+const ListNav = ({
+  page,
+  maxPage,
+  prevPage,
+  nextPage,
+  goToPage,
+  sortFunc,
+  sortType1,
+  sortType2,
+}) => {
   return (
     <div className="list-nav">
       <div>
-        {page * 1 > 0 ? (
+        {page * 1 > 1 ? (
           <div className="list-back">
-            <Link to="./0">First</Link>
-            <Link to={`./${page * 1 - 1}`}>Previous</Link>
+            <a onClick={() => goToPage(1)}>First</a>
+            <a onClick={prevPage}>Previous</a>
           </div>
         ) : (
           <div className="list-back inactive">
@@ -18,10 +27,47 @@ const ListNav = ({ page, maxPage }) => {
         )}
       </div>
       <div>
+        <label>
+          <p>Page: </p>
+          <input
+            type="number"
+            min="1"
+            max={maxPage}
+            step="1"
+            defaultValue={page}
+          ></input>
+          <button
+            className="pagination-button"
+            onClick={(ev) => {
+              goToPage(ev.target.parentNode.children[1].value);
+            }}
+          >
+            Go
+          </button>
+        </label>
+      </div>
+      <div>
+        <label>
+          <p>Sort: </p>
+          <button
+            className="pagination-button"
+            onClick={() => sortFunc(sortType1)}
+          >
+            {sortType1}
+          </button>
+          <button
+            className="pagination-button"
+            onClick={() => sortFunc(sortType2)}
+          >
+            {sortType2}
+          </button>
+        </label>
+      </div>
+      <div>
         {page * 1 < maxPage ? (
           <div className="list-fwrd">
-            <Link to={`./${maxPage}`}>Last</Link>
-            <Link to={`./${page * 1 + 1}`}>Next</Link>
+            <a onClick={() => goToPage(maxPage)}>Last</a>
+            <a onClick={nextPage}>Next</a>
           </div>
         ) : (
           <div className="list-fwrd inactive">

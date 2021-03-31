@@ -6,7 +6,7 @@ const MainNav = (props) => {
     <div id="main-nav">
       <Link to="/">Home</Link>
       <div>
-        <Link to="/campus">Campuses</Link>
+        <Link to="/campus/all/1/10/name">Campuses</Link>
         <Link to="/student">Students</Link>
       </div>
     </div>

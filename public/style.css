@@ -35,6 +35,14 @@ button {
   border-radius: 0.5em;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
+button.pagination-button {
+  background-color: var(--card-bg-color);
+}
+
 #main-nav {
   padding: 1em;
   background-color: var(--second-bg-color);
@@ -85,6 +93,7 @@ button {
   background-color: var(--second-bg-color);
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: calc(100% - 1em);
   border-radius: 0.5em;
 }
@@ -93,8 +102,13 @@ button {
   color: white;
 }
 
-.list-nav > div {
-  width: 50%;
+.list-nav a:hover {
+  cursor: pointer;
+}
+
+.list-nav label {
+  display: flex;
+  align-items: center;
 }
 
 .list-back a:first-child {
@@ -112,6 +126,10 @@ button {
 
 .inactive > a {
   color: var(--main-bg-color);
+}
+
+.inactive > a:hover {
+  cursor: default;
 }
 
 .campus-list {
