@@ -3,13 +3,13 @@ const {
   models: { Campus, Student },
 } = require('../db');
 
-//This router is mounted at '/api/students'
+//This router is mounted at '/api/student'
 
 const router = Router();
 
 router.use(json({ strict: false }));
 
-//GET /api/studentList
+//GET /api/student
 router.get('/', (req, res, next) => {
   Student.findAll({
     include: { model: Campus, attributes: ['name'] },
@@ -22,7 +22,7 @@ router.get('/', (req, res, next) => {
     .catch(next);
 });
 
-//POST /api/studentList
+//POST /api/student
 router.post('/', (req, res, next) => {
   const student = new Student(req.body);
   student
@@ -31,7 +31,7 @@ router.post('/', (req, res, next) => {
     .catch(next);
 });
 
-//PUT /api/studentList/deregister/:id
+//PUT /api/student/deregister/:studentId/:campusId
 router.put('/deregister/:studentId/:campusId', (req, res, next) => {
   const { studentId, campusId } = req.params;
   console.log(studentId, campusId);
@@ -41,18 +41,12 @@ router.put('/deregister/:studentId/:campusId', (req, res, next) => {
     })
     .then(() => res.sendStatus(201))
     .catch(next);
-  // Student.findByPk(id, { include: { model: Campus } })
-  //   .then((student) => {
-  //     return student.campus.removeStudent(student);
-  //   })
-  //   .then(() => res.sendStatus(201))
-  //   .catch(next);
 });
 
-//GET /api/studentList/student/:id
-router.get('/student/:id', (req, res, next) => {
-  const { id } = req.params;
-  Student.findByPk(id, {
+//GET /api/student/:studentId
+router.get('/student/:studentId', (req, res, next) => {
+  const { studentId } = req.params;
+  Student.findByPk(studentId, {
     include: {
       model: Campus,
       include: { model: Student, attributes: ['id'] },
@@ -62,21 +56,21 @@ router.get('/student/:id', (req, res, next) => {
     .catch(next);
 });
 
-//PUT /api/studentList/student/:id
-router.put('/student/:id', (req, res, next) => {
-  const { id } = req.params;
+//PUT /api/student/:studentId
+router.put('/student/:studentId', (req, res, next) => {
+  const { studentId } = req.params;
   const updatedStudent = req.body;
-  Student.update(updatedStudent, { where: { id } })
+  Student.update(updatedStudent, { where: { studentId } })
     .then(() => {
       res.sendStatus(201);
     })
     .catch(next);
 });
 
-//DELETE /api/studentList/student/:id
-router.delete('/student/:id', (req, res, next) => {
-  const { id } = req.params;
-  Student.findByPk(id)
+//DELETE /api/student/:studentId
+router.delete('/student/:studentId', (req, res, next) => {
+  const { studentId } = req.params;
+  Student.findByPk(studentId)
     .then((student) => {
       return student.destroy();
     })

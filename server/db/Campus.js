@@ -5,6 +5,11 @@ const { Model, DataTypes } = require('sequelize');
 class Campus extends Model {}
 Campus.init(
   {
+    campusId: {
+      type: DataTypes.UUID,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,

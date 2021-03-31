@@ -48,9 +48,9 @@ const syncAndSeed = () => {
       })
       .then(() => {
         return Promise.all(
-          seedStudents.map(({ campus, seedCampusStudents }) => {
+          seedStudents.map(({ campus: { campusId }, seedCampusStudents }) => {
             seedCampusStudents.forEach((student) => {
-              student.campusId = campus.id;
+              student.campusId = campusId;
             });
             return Promise.all(
               seedCampusStudents.map((student) => student.save())

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchCampusList } from '../../store/campus/campusList';
-import addStudent from '../../store/student/addStudent';
-import editStudent from '../../store/student/editStudent';
+import addStudent from '../utils/addStudent';
+import editStudent from '../utils/editStudent';
 import { fetchStudentDetail } from '../../store/student/studentDetail';
 
 class StudentForm extends Component {

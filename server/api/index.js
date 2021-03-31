@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-router.use('/campusList', require('./campusList'));
-router.use('/studentList', require('./studentList'));
+router.use('/campus', require('./campus'));
+router.use('/student', require('./student'));
 
 module.exports = router;

@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import deleteCampus from '../../store/campus/deleteCampus';
+import deleteCampus from '../utils/deleteCampus';
 
 class CampusCard extends Component {
   linkToCampus = (ev) => {
     const { campus, history } = this.props;
     if (ev.target.tagName !== 'BUTTON') {
-      history.push(`/campusList/campus/${campus.id}/0`);
+      history.push(`/campus/${campus.id}?page=0&size=20&sort=lastName`);
     }
   };
   render() {
-    const { campus, history, student, deleteCampus } = this.props;
+    const { campus, student, deleteCampus } = this.props;
     const students = campus.students || '';
     return (
       <div className="campus-card-wrapper" onClick={this.linkToCampus}>

@@ -13,7 +13,7 @@ export const setCampusList = (campusList) => {
 export const fetchCampusList = () => {
   return (dispatch) => {
     axios
-      .get('/api/campusList')
+      .get('/api/campus')
       .then(({ data }) => {
         dispatch(setCampusDetail({}));
         dispatch(setCampusList(data));

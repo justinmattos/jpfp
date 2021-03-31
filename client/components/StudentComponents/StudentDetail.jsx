@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { fetchCampusList } from '../../store/campus/campusList';
 import { fetchStudentDetail } from '../../store/student/studentDetail';
-import deleteStudent from '../../store/student/deleteStudent';
+import deleteStudent from '../utils/deleteStudent';
 import CampusCard from '../CampusComponents/CampusCard.jsx';
 import { Link } from 'react-router-dom';
-import editStudent from '../../store/student/editStudent';
+import editStudent from '../utils/editStudent';
 
 class StudentDetail extends Component {
   componentDidMount() {

@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCampusDetail } from '../../store/campus/campusDetail';
-import deleteCampus from '../../store/campus/deleteCampus';
-import { fetchStudentList } from '../../store/student/studentList';
+import deleteCampus from '../utils/deleteCampus';
+import { fetchCampusStudents } from '../../store/campus/campusStudents';
 import ListNav from '../NavComponents/ListNav.jsx';
 import StudentCard from '../StudentComponents/StudentCard.jsx';
 
@@ -11,7 +11,7 @@ class CampusDetail extends Component {
   componentDidMount() {
     const { id } = this.props;
     this.props.fetchCampusDetail(id);
-    document.querySelector('.filter-select');
+    this.props.fetchCampusStudents({ id, page, size, sortStudentsBy });
   }
   componentDidUpdate({ campusDetail: prevCampusDetail, id: prevId }) {
     const { id, campusDetail } = this.props;
@@ -23,7 +23,10 @@ class CampusDetail extends Component {
       this.props.fetchCampusDetail(id);
     }
   }
-  sortStudents = () => {};
+  sortStudents = (type) => {
+    const { id } = this.props;
+    this.props.fetchCampusStudents(id, type);
+  };
   render() {
     const {
       campusDetail,
@@ -76,8 +79,15 @@ class CampusDetail extends Component {
               </div>
               <div>
                 <label htmlFor="student-sort">
-                  Sort Students By:
-                  <select></select> {/* Maybe two buttons would be better */}
+                  <div>Sort Students By:</div>
+                  <div>
+                    <button onClick={() => this.sortStudents('lastName')}>
+                      Last Name
+                    </button>
+                    <button onClick={() => this.sortStudents('GPA')}>
+                      GPA
+                    </button>
+                  </div>
                 </label>
               </div>
             </div>
@@ -118,8 +128,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
-    fetchCampusDetail: (id, sortStudentsBy = 'lastName') =>
-      dispatch(fetchCampusDetail(id, sortStudentsBy)),
+    fetchCampusDetail: (id) => dispatch(fetchCampusDetail(id)),
+    fetchCampusStudents: (id, sortStudentsBy = 'lastName') =>
+      dispatch(fetchCampusStudents(id, sortStudentsBy, history)),
     deleteCampus: (id) => dispatch(deleteCampus(id, history)),
   };
 };

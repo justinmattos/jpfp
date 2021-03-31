@@ -8,6 +8,7 @@ import StudentList from './StudentComponents/StudentList.jsx';
 import StudentDetail from './StudentComponents/StudentDetail.jsx';
 import CampusForm from './CampusComponents/CampusForm.jsx';
 import StudentForm from './StudentComponents/StudentForm.jsx';
+import Home from './Home.jsx';
 
 class App extends Component {
   render() {
@@ -18,26 +19,15 @@ class App extends Component {
         </div>
         <div id="content">
           <Switch>
-            <Route component={CampusForm} path="/campusList/campus/:id/edit" />
-            <Route
-              component={CampusDetail}
-              path="/campusList/campus/:id/:page"
-            />
-            <Route component={CampusForm} path="/campusList/add" />
-            <Route component={CampusList} path="/campusList/:page" exact />
-            <Route
-              component={StudentForm}
-              path="/studentList/student/:id/edit"
-            />
-            <Route component={StudentDetail} path="/studentList/student/:id" />
-            <Route component={StudentForm} path="/studentList/add" />
-            <Route component={StudentList} path="/studentList/:page" exact />
-            <Route>
-              <div className="not-found">
-                <h2>Page Not Found</h2>
-                <p>Sorry, that page does not seem to exist . . .</p>
-              </div>
-            </Route>
+            <Route component={CampusForm} path="/campus/:id/edit" />
+            <Route component={CampusDetail} path="/campus/:id" />
+            <Route component={CampusForm} path="/campus/add" />
+            <Route component={CampusList} path="/campus" exact />
+            <Route component={StudentForm} path="/student/:id/edit" />
+            <Route component={StudentDetail} path="/student/:id" />
+            <Route component={StudentForm} path="/student/add" />
+            <Route component={StudentList} path="/student" exact />
+            <Route component={Home} />
           </Switch>
         </div>
       </Router>

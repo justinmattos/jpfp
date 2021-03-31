@@ -9,10 +9,10 @@ export const setCampusDetail = (campus) => {
   };
 };
 
-export const fetchCampusDetail = (id, sortStudentsBy = 'lastName') => {
+export const fetchCampusDetail = (campusId) => {
   return (dispatch) => {
     axios
-      .get(`/api/campusList/campus/${id}/${sortStudentsBy}`)
+      .get(`/api/campus/${campusId}`)
       .then(({ data }) => {
         dispatch(setCampusDetail(data));
       })

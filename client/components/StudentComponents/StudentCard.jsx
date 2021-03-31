@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import deleteStudent from '../../store/student/deleteStudent';
+import deleteStudent from '../utils/deleteStudent';
 import deregisterStudent from '../../store/student/deregisterStudent';
 
 class StudentCard extends Component {
