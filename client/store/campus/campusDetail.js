@@ -16,7 +16,9 @@ export const fetchCampusDetail = (campusId) => {
       .then(({ data }) => {
         dispatch(setCampusDetail(data));
       })
-      .catch(console.error);
+      .catch(() => {
+        dispatch(setCampusDetail(''));
+      });
   };
 };
 

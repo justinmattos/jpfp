@@ -45,12 +45,9 @@ const mapStateToProps = (state, ownProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { campusId } = ownProps;
   return {
-    deleteStudent: (studentId) => {
-      dispatch(deleteStudent(studentId));
-    },
-    deregisterStudent: (studentId) => {
-      dispatch(deregisterStudent(studentId, campusId));
-    },
+    deleteStudent: (studentId) => dispatch(deleteStudent(studentId)),
+    deregisterStudent: (studentId) =>
+      dispatch(deregisterStudent(studentId, campusId)),
   };
 };
 

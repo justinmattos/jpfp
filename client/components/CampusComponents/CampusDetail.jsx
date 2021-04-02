@@ -3,9 +3,6 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCampusDetail } from '../../store/campus/campusDetail';
 import deleteCampus from '../../store/campus/deleteCampus';
-import { fetchCampusStudents } from '../../store/campus/campusStudents';
-import ListNav from '../NavComponents/ListNav.jsx';
-import StudentCard from '../StudentComponents/StudentCard.jsx';
 import StudentList from '../StudentComponents/StudentList.jsx';
 
 class CampusDetail extends Component {
@@ -27,15 +24,7 @@ class CampusDetail extends Component {
     }
   }
   render() {
-    const {
-      campusDetail,
-      history,
-      deleteCampus,
-      sort,
-      page,
-      size,
-    } = this.props;
-    const campusId = campusDetail.campusId || '';
+    const { campusDetail, campusId, history, deleteCampus } = this.props;
     const name = campusDetail.name || 'Loading Campus . . . ';
     const imageURL = campusDetail.imageURL || '';
     const address = campusDetail.address || '';
@@ -64,12 +53,10 @@ class CampusDetail extends Component {
                 <p className="campus-description">{description}</p>
               </div>
               <div>
-                <Link to={`/campusList/campus/${campusDetail.id}/edit`}>
+                <Link to={`/campus/${campusId}/edit`}>
                   <button>Edit</button>
                 </Link>
-                <button onClick={() => deleteCampus(campusDetail.id, history)}>
-                  Delete
-                </button>
+                <button onClick={() => deleteCampus(campusId)}>Delete</button>
               </div>
             </div>
             <div className="campus-detail-list">
@@ -101,7 +88,10 @@ const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
     fetchCampusDetail: (campusId) => dispatch(fetchCampusDetail(campusId)),
-    deleteCampus: (campusId) => dispatch(deleteCampus(campusId, history)),
+    deleteCampus: (campusId) => {
+      dispatch(deleteCampus(campusId));
+      history.push('/campus/all');
+    },
   };
 };
 

@@ -16,7 +16,9 @@ export const fetchStudentDetail = (studentId) => {
       .then(({ data }) => {
         dispatch(setStudentDetail(data));
       })
-      .catch(console.error);
+      .catch(() => {
+        dispatch(setStudentDetail(''));
+      });
   };
 };
 

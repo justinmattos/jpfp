@@ -18,7 +18,7 @@ router.get('/all', (req, res, next) => {
     },
     order: ['name'],
   })
-    .then((data) => res.send(data))
+    .then((data) => res.send({ currentList: data, maxPage: 0 }))
     .catch(next);
 });
 
@@ -109,6 +109,7 @@ router.put('/:campusId', (req, res, next) => {
 //DELETE /api/campus/:campusId
 router.delete('/:campusId', (req, res, next) => {
   const { campusId } = req.params;
+  console.log(campusId);
   Campus.findByPk(campusId)
     .then((campus) => {
       return campus.destroy();

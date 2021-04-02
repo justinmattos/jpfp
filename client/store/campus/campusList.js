@@ -33,7 +33,7 @@ export const fetchAllCampus = () => {
   };
 };
 
-const initialState = [];
+const initialState = { currentList: [], maxPage: 0 };
 
 export default (state = initialState, action) => {
   const { type, campusList } = action;

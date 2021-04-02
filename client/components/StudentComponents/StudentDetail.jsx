@@ -40,7 +40,7 @@ class StudentDetail extends Component {
         {studentDetail === '' ? (
           <div>
             <h2>Sorry, it seems that student is not in the database</h2>
-            <Link to="/student/all/sortByName/1/20">
+            <Link to="/student/all">
               <button>Return to All Students</button>
             </Link>
           </div>

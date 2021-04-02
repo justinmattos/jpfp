@@ -46,12 +46,10 @@ router.post('/', (req, res, next) => {
 
 //PUT /api/student/deregister/:studentId/:campusId
 router.put('/deregister/:studentId/:campusId', (req, res, next) => {
-  //Something is wrong with this now that CampusDetail implements StudentList
   const { studentId, campusId } = req.params;
-  console.log(studentId, campusId);
   Campus.findByPk(campusId)
     .then((campus) => {
-      return campus.removeStudent(studentId * 1);
+      return campus.removeStudent(studentId);
     })
     .then(() => res.sendStatus(201))
     .catch(next);
@@ -85,7 +83,9 @@ router.get('/:studentId', (req, res, next) => {
 //PUT /api/student/:studentId
 router.put('/:studentId', (req, res, next) => {
   const { studentId } = req.params;
-  const updatedStudent = req.body;
+  const { firstName, lastName, email, imageURL, GPA, campusId } = req.body;
+  const updatedStudent = { firstName, lastName, email, imageURL, GPA };
+  updatedStudent.campusId = !!campusId ? campusId : null;
   Student.update(updatedStudent, { where: { studentId } })
     .then(() => {
       res.sendStatus(201);

@@ -6,9 +6,9 @@ import { fetchCampusDetail } from '../../store/campus/campusDetail';
 
 class CampusForm extends Component {
   componentDidMount() {
-    const { id, editMode } = this.props;
+    const { campusId, editMode } = this.props;
     if (editMode) {
-      this.props.fetchCampusDetail(id);
+      this.props.fetchCampusDetail(campusId);
     }
   }
 
@@ -23,10 +23,10 @@ class CampusForm extends Component {
   };
 
   formSubmit = (ev) => {
-    const { editMode, id } = this.props;
+    const { editMode, campusId } = this.props;
     ev.preventDefault();
     if (editMode) {
-      this.props.editCampus(this.getFormValues(), id);
+      this.props.editCampus(this.getFormValues(), campusId);
     } else {
       this.props.addCampus(this.getFormValues());
     }
@@ -73,20 +73,20 @@ class CampusForm extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { id } = ownProps.match.params;
+  const { campusId } = ownProps.match.params;
   const { campusDetail } = state;
-  const editMode = !!id;
-  return { campusDetail, editMode, id };
+  const editMode = !!campusId;
+  return { campusDetail, editMode, campusId };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
     addCampus: (newCampus) => {
-      dispatch(addCampus(newCampus, history));
+      addCampus(newCampus, history);
     },
     editCampus: (updatedCampus, campusId) => {
-      dispatch(editCampus(updatedCampus, campusId, history));
+      editCampus(updatedCampus, campusId, history);
     },
     fetchCampusDetail: (id) => {
       dispatch(fetchCampusDetail(id));

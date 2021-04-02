@@ -5,13 +5,34 @@ import addStudent from '../utils/addStudent';
 import editStudent from '../utils/editStudent';
 import { fetchStudentDetail } from '../../store/student/studentDetail';
 
+//SOMETHING IS BROKEN HERE FOR ADD STUDENT MODE
+
 class StudentForm extends Component {
+  state = { selectValue: '' };
+
   componentDidMount() {
-    const { studentId, editMode } = this.props;
+    const {
+      studentId,
+      campusId,
+      editMode,
+      fetchStudentDetail,
+      fetchAllCampus,
+    } = this.props;
     if (editMode) {
-      this.props.fetchStudentDetail(studentId);
+      this.setState({ selectValue: campusId });
+      fetchStudentDetail(studentId);
     }
-    this.props.fetchAllCampus();
+    fetchAllCampus();
+  }
+
+  componentDidUpdate({ studentDetail: { studentId: prevStudentId } }) {
+    const {
+      studentDetail: { studentId },
+      campusId,
+    } = this.props;
+    if (studentId !== prevStudentId) {
+      this.setState({ selectValue: campusId });
+    }
   }
 
   getFormValues = () => {
@@ -34,7 +55,6 @@ class StudentForm extends Component {
       return acc;
     }, {});
     if (validForm) {
-      console.log(formData);
       return formData;
     } else {
       return validForm;
@@ -56,14 +76,24 @@ class StudentForm extends Component {
     }
   };
 
+  selectOnChange = ({ target: { value: selectValue } }) => {
+    this.setState({ selectValue });
+  };
+
   render() {
-    const { studentDetail, campusList, editMode } = this.props;
+    const {
+      studentDetail,
+      campusList,
+      editMode,
+      campus,
+      campusId,
+    } = this.props;
+    const { currentList } = campusList;
     const firstName = studentDetail.firstName || '';
     const lastName = studentDetail.lastName || '';
     const email = studentDetail.email || '';
     const imageURL = studentDetail.imageURL || '';
     const GPA = studentDetail.GPA || '';
-    const campus = studentDetail.campus || '';
     return (
       <form className="student-form form" onSubmit={this.formSubmit}>
         <h2>{editMode ? 'Edit' : 'Add a'} Student</h2>
@@ -96,22 +126,20 @@ class StudentForm extends Component {
         </label>
         <label htmlFor="campusId">
           <p>Campus:</p>
-          <select id="campusId">
-            {!!campus ? (
-              ''
-            ) : (
-              <option key="0" value="" selected>
-                -- Select a Campus (not required) --
-              </option>
-            )}
-            {campusList.map((campusOption) => {
+          <select
+            id="campusId"
+            value={this.state.selectValue}
+            onChange={this.selectOnChange}
+          >
+            <option key="0" value="">
+              {campus
+                ? '-- Deregister Student --'
+                : '-- Select a Campus (not required) --'}
+            </option>
+            {currentList.map((campusOption) => {
               const { name, campusId } = campusOption;
               return (
-                <option
-                  key={campusId}
-                  value={campusId}
-                  selected={campusId === campus.campusId ? true : false}
-                >
+                <option key={campusId} value={campusId}>
                   {name}
                 </option>
               );
@@ -127,8 +155,10 @@ class StudentForm extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { studentId } = ownProps.match.params;
   const { studentDetail, campusList } = state;
+  const { campusId } = studentDetail;
+  const campus = !!campusId;
   const editMode = !!studentId;
-  return { studentDetail, campusList, editMode, studentId };
+  return { studentDetail, campusList, editMode, studentId, campus, campusId };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
