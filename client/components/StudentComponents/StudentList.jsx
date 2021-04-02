@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCampusStudents } from '../../store/campus/campusStudents';
+import {
+  setPageDetail,
+  nextPage,
+  prevPage,
+  goToPage,
+  setSort,
+} from '../../store/pageDetail';
 import { fetchStudentList } from '../../store/student/studentList';
 import ListNav from '../NavComponents/ListNav.jsx';
 import StudentCard from './StudentCard.jsx';
@@ -9,70 +16,46 @@ import StudentCard from './StudentCard.jsx';
 class StudentList extends Component {
   componentDidMount() {
     const {
-      sort,
-      page,
-      size,
+      setPageDetail,
       campusId,
       fetchCampusStudents,
       fetchStudentList,
     } = this.props;
+    const initialPageDetail = { sort: 'sortByName', page: 1, size: 20 };
     if (campusId) {
-      fetchCampusStudents({ campusId, sort, page, size });
+      initialPageDetail.size = 10;
+      fetchCampusStudents({ campusId, ...initialPageDetail });
     } else {
-      fetchStudentList({ sort, page, size });
+      fetchStudentList(initialPageDetail);
     }
+    setPageDetail(initialPageDetail);
   }
-  componentDidUpdate({ page: prevPage, sort: prevSort }) {
+  componentDidUpdate({ pageDetail: { page: prevPage, sort: prevSort } }) {
     const {
-      page,
-      size,
-      sort,
+      pageDetail,
       campusId,
       fetchCampusStudents,
       fetchStudentList,
     } = this.props;
-    console.log(prevPage, page, campusId);
+    const { page, sort } = pageDetail;
     if (prevPage !== page || prevSort !== sort) {
       if (campusId) {
-        fetchCampusStudents({ campusId, sort, page, size });
+        fetchCampusStudents({ campusId, ...pageDetail });
       } else {
-        fetchStudentList({ sort, page, size });
+        fetchStudentList(pageDetail);
       }
     }
   }
-  prevPage = () => {
-    const { page } = this.props;
-    this.goToPage(page * 1 - 1);
-  };
-  nextPage = () => {
-    const { page } = this.props;
-    this.goToPage(page * 1 + 1);
-  };
-  goToPage = (newPage) => {
-    const { size, sort, history, campusId } = this.props;
-    if (campusId) {
-      history.push(`/campus/${campusId}/${sort}/${newPage}/${size}`);
-    } else {
-      history.push(`/student/all/${sort}/${newPage}/${size}`);
-    }
-  };
-  sortFunc = (sortType) => {
-    const { history, campusId } = this.props;
-    if (campusId) {
-      history.push(`/campus/${campusId}/${sortType}/1/10`);
-    } else {
-      history.push(`/student/all/${sortType}/1/20`);
-    }
-  };
   render() {
     const {
-      studentList: { currentList, maxPage },
+      studentList,
+      campusStudents,
+      pageDetail: { size, page, sort },
+      paginationFuncs: { nextPage, prevPage, goToPage, setSort },
       history,
-      size,
-      page,
-      sort,
       campusId,
     } = this.props;
+    const { currentList, maxPage } = campusId ? campusStudents : studentList;
     const sortOption = sort === 'sortByName' ? 'sortByGPA' : 'sortByName';
     const sortLabel = sortOption.slice(6);
     const StudentListNav = () => {
@@ -80,10 +63,10 @@ class StudentList extends Component {
         <ListNav
           page={page}
           maxPage={maxPage}
-          nextPage={this.nextPage}
-          prevPage={this.prevPage}
-          goToPage={this.goToPage}
-          sortFunc={this.sortFunc}
+          nextPage={nextPage}
+          prevPage={prevPage}
+          goToPage={goToPage}
+          sortFunc={setSort}
           sortOption={sortOption}
           sortLabel={sortLabel}
         />
@@ -126,10 +109,9 @@ class StudentList extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { studentList } = state;
+  const { studentList, campusStudents, pageDetail } = state;
   const { history, campusId } = ownProps;
-  const { sort, page, size } = campusId ? ownProps : ownProps.match.params;
-  return { studentList, history, page, size, sort, campusId };
+  return { studentList, campusStudents, pageDetail, history, campusId };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
@@ -138,6 +120,14 @@ const mapDispatchToProps = (dispatch, ownProps) => {
       dispatch(fetchStudentList({ sort, page, size })),
     fetchCampusStudents: ({ campusId, sort, page, size }) =>
       dispatch(fetchCampusStudents({ campusId, sort, page, size })),
+    setPageDetail: ({ sort, page, size }) =>
+      dispatch(setPageDetail({ sort, page, size })),
+    paginationFuncs: {
+      nextPage: () => dispatch(nextPage()),
+      prevPage: () => dispatch(prevPage()),
+      goToPage: (page) => dispatch(goToPage(page)),
+      setSort: (sort) => dispatch(setSort(sort)),
+    },
   };
 };
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const MainNav = (props) => {
+const MainNav = () => {
   return (
     <div id="main-nav">
       <Link to="/">Home</Link>
       <div>
-        <Link to="/campus/all/sortByName/1/10">Campuses</Link>
-        <Link to="/student/all/sortByName/1/20">Students</Link>
+        <Link to="/campus/all">Campuses</Link>
+        <Link to="/student/all">Students</Link>
       </div>
     </div>
   );

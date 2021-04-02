@@ -2,43 +2,40 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCampusList } from '../../store/campus/campusList';
+import {
+  setPageDetail,
+  nextPage,
+  prevPage,
+  goToPage,
+  setSort,
+} from '../../store/pageDetail';
 import ListNav from '../NavComponents/ListNav.jsx';
 import CampusCard from './CampusCard.jsx';
 
 class CampusList extends Component {
   componentDidMount() {
-    const { page, size, sort } = this.props;
-    this.props.fetchCampusList({ page, size, sort });
+    const { setPageDetail, fetchCampusList } = this.props;
+    const initialPageDetail = {
+      sort: 'sortByName',
+      page: 1,
+      size: 10,
+    };
+    fetchCampusList(initialPageDetail);
+    setPageDetail(initialPageDetail);
   }
-  componentDidUpdate({ page: prevPage, sort: prevSort }) {
-    const { page, size, sort } = this.props;
+  componentDidUpdate({ pageDetail: { page: prevPage, sort: prevSort } }) {
+    const { pageDetail, fetchCampusList } = this.props;
+    const { page, sort } = pageDetail;
     if (prevPage !== page || prevSort !== sort) {
-      this.props.fetchCampusList({ page, size, sort });
+      fetchCampusList(pageDetail);
     }
   }
-  prevPage = () => {
-    const { page } = this.props;
-    this.goToPage(page * 1 - 1);
-  };
-  nextPage = () => {
-    const { page } = this.props;
-    this.goToPage(page * 1 + 1);
-  };
-  goToPage = (newPage) => {
-    const { size, sort, history } = this.props;
-    history.push(`/campus/all/${sort}/${newPage}/${size}`);
-  };
-  sortFunc = (sortType) => {
-    const { history } = this.props;
-    history.push(`/campus/all/${sortType}/1/10`);
-  };
   render() {
     const {
       campusList: { currentList, maxPage },
       history,
-      page,
-      sort,
-      size,
+      pageDetail: { page, sort, size },
+      paginationFuncs: { nextPage, prevPage, goToPage, setSort },
     } = this.props;
     const sortOption = sort === 'sortByName' ? 'sortByStudents' : 'sortByName';
     const sortLabel = sortOption.slice(6);
@@ -47,10 +44,10 @@ class CampusList extends Component {
         <ListNav
           page={page}
           maxPage={maxPage}
-          nextPage={this.nextPage}
-          prevPage={this.prevPage}
-          goToPage={this.goToPage}
-          sortFunc={this.sortFunc}
+          nextPage={nextPage}
+          prevPage={prevPage}
+          goToPage={goToPage}
+          sortFunc={setSort}
           sortOption={sortOption}
           sortLabel={sortLabel}
         />
@@ -93,18 +90,23 @@ class CampusList extends Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const { campusList } = state;
-  const { history } = ownProps;
-  const { page, size, sort } = ownProps.match.params;
-  return { campusList, history, page, size, sort };
-};
+const mapStateToProps = ({ campusList, pageDetail }, { history }) => ({
+  campusList,
+  pageDetail,
+  history,
+});
 
-const mapDispatchToProps = (dispatch, ownProps) => {
-  return {
-    fetchCampusList: ({ page, size, sort }) =>
-      dispatch(fetchCampusList({ page, size, sort })),
-  };
-};
+const mapDispatchToProps = (dispatch) => ({
+  fetchCampusList: ({ page, size, sort }) =>
+    dispatch(fetchCampusList({ page, size, sort })),
+  setPageDetail: ({ page, size, sort }) =>
+    dispatch(setPageDetail({ page, size, sort })),
+  paginationFuncs: {
+    nextPage: () => dispatch(nextPage()),
+    prevPage: () => dispatch(prevPage()),
+    goToPage: (page) => dispatch(goToPage(page)),
+    setSort: (sort) => dispatch(setSort(sort)),
+  },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(CampusList);

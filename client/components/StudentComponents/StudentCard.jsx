@@ -12,7 +12,9 @@ class StudentCard extends Component {
   };
   render() {
     const { student, campusId, deleteStudent, deregisterStudent } = this.props;
-    const campusName = student.campus ? student.campus.name : '';
+    const campusName = student.campus
+      ? student.campus.name
+      : 'No Campus Registered';
     const { imageURL, fullName, GPA, studentId } = student;
     return (
       <div className="student-card-wrapper" onClick={this.linkToStudent}>
@@ -41,13 +43,10 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const {
-    campusId,
-    pageDetail: { page, sort, size },
-  } = ownProps;
+  const { campusId } = ownProps;
   return {
     deleteStudent: (studentId) => {
-      dispatch(deleteStudent({ studentId, sort, page, size }));
+      dispatch(deleteStudent(studentId));
     },
     deregisterStudent: (studentId) => {
       dispatch(deregisterStudent(studentId, campusId));

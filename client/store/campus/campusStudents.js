@@ -19,3 +19,11 @@ export const fetchCampusStudents = ({ campusId, page, size, sort }) => {
       .catch(console.error);
   };
 };
+
+const initialState = [];
+
+export default (state = initialState, action) => {
+  const { type, students } = action;
+  if (type === SET_CAMPUS_STUDENTS) return students;
+  else return state;
+};

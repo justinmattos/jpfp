@@ -10,7 +10,7 @@ import StudentList from '../StudentComponents/StudentList.jsx';
 
 class CampusDetail extends Component {
   componentDidMount() {
-    const { campusId, sort, size, page } = this.props;
+    const { campusId } = this.props;
     this.props.fetchCampusDetail(campusId);
   }
   componentDidUpdate({
@@ -26,10 +26,6 @@ class CampusDetail extends Component {
       this.props.fetchCampusDetail(campusId);
     }
   }
-  sortStudents = (type) => {
-    const { campusId } = this.props;
-    this.props.fetchCampusStudents(campusId, type);
-  };
   render() {
     const {
       campusDetail,
@@ -50,7 +46,7 @@ class CampusDetail extends Component {
         {campusDetail === '' ? (
           <div>
             <h2>Sorry, it seems that campus is not in the database</h2>
-            <Link to="/campusList/0">
+            <Link to="/campus/all">
               <button>Return to All Campuses</button>
             </Link>
           </div>
@@ -78,13 +74,7 @@ class CampusDetail extends Component {
             </div>
             <div className="campus-detail-list">
               {students ? (
-                <StudentList
-                  campusId={campusId}
-                  history={history}
-                  sort={sort}
-                  page={page}
-                  size={size}
-                />
+                <StudentList campusId={campusId} history={history} />
               ) : (
                 'This campus does not have any students'
               )}
@@ -98,9 +88,13 @@ class CampusDetail extends Component {
 
 const mapStateToProps = (state, ownProps) => {
   const { campusDetail } = state;
-  const { history } = ownProps;
-  const { campusId, sort, page, size } = ownProps.match.params;
-  return { campusDetail, campusId, history, sort, page, size };
+  const {
+    history,
+    match: {
+      params: { campusId },
+    },
+  } = ownProps;
+  return { campusDetail, campusId, history };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {

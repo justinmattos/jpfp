@@ -9,7 +9,7 @@ class CampusCard extends Component {
       history,
     } = this.props;
     if (ev.target.tagName !== 'BUTTON') {
-      history.push(`/campus/${campusId}/sortByName/1/10`);
+      history.push(`/campus/${campusId}`);
     }
   };
   render() {
@@ -43,14 +43,8 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const {
-    pageDetail: { page, sort, size },
-  } = ownProps;
   return {
-    deleteCampus: (campusId) => {
-      console.log('Deleting campus ', campusId);
-      dispatch(deleteCampus({ campusId, sort, page, size }));
-    },
+    deleteCampus: (campusId) => dispatch(deleteCampus(campusId)),
   };
 };
 

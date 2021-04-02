@@ -1,13 +1,13 @@
 import axios from 'axios';
 import { fetchCampusList } from './campusList';
 
-export default ({ campusId, sort, page, size }) => {
-  return (dispatch) => {
+export default (campusId) => {
+  return (dispatch, getState) => {
     axios
       .delete(`/api/campus/${campusId}`)
       .then(() => {
-        console.log(`Deleted campus ${campusId}`);
-        dispatch(fetchCampusList({ sort, page, size }));
+        const { pageDetail } = getState();
+        dispatch(fetchCampusList(pageDetail));
       })
       .catch(console.error);
   };

@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { SET_CAMPUS_STUDENTS } from '../campus/campusStudents';
 import { setStudentDetail } from './studentDetail';
 
 const SET_STUDENT_LIST = 'SET_STUDENT_LIST';
@@ -27,7 +26,6 @@ const initialState = [];
 
 export default (state = initialState, action) => {
   const { type, students } = action;
-  if (type === SET_STUDENT_LIST || type === SET_CAMPUS_STUDENTS)
-    return students;
+  if (type === SET_STUDENT_LIST) return students;
   else return state;
 };
