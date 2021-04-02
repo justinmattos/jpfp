@@ -1,6 +1,7 @@
 const faker = require('faker/locale/en_US');
 const db = require('./db');
 const { Model, DataTypes } = require('sequelize');
+const Student = require('./Student');
 
 class Campus extends Model {}
 Campus.init(

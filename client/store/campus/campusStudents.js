@@ -12,7 +12,7 @@ export const setCampusStudents = (students) => {
 export const fetchCampusStudents = ({ campusId, page, size, sort }) => {
   return (dispatch) => {
     axios
-      .get(`/api/campus/${campusId}/students/${page}/${size}/${sort}`)
+      .get(`/api/campus/${campusId}/students/${sort}/${page}/${size}`)
       .then(({ data }) => {
         dispatch(setCampusStudents(data));
       })

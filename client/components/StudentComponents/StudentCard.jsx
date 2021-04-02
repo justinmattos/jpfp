@@ -1,33 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import deleteStudent from '../utils/deleteStudent';
+import deleteStudent from '../../store/student/deleteStudent';
 import deregisterStudent from '../../store/student/deregisterStudent';
 
 class StudentCard extends Component {
   linkToStudent = (ev) => {
     const { student, history } = this.props;
     if (ev.target.tagName !== 'BUTTON') {
-      history.push(`/studentList/student/${student.id}`);
+      history.push(`/student/${student.studentId}`);
     }
   };
   render() {
-    const { student, campus, deleteStudent, deregisterStudent } = this.props;
+    const { student, campusId, deleteStudent, deregisterStudent } = this.props;
     const campusName = student.campus ? student.campus.name : '';
-    const GPA = student.GPA || '';
+    const { imageURL, fullName, GPA, studentId } = student;
     return (
       <div className="student-card-wrapper" onClick={this.linkToStudent}>
         <div className="student-card">
-          <img src={student.imageURL} />
-          <h4>{student.fullName}</h4>
-          {campus ? <h5>GPA: {GPA}</h5> : <h5>{campusName}</h5>}
+          <img src={imageURL} />
+          <h4>{fullName}</h4>
+          {campusId ? '' : <h5>{campusName}</h5>}
+          <h5>GPA: {GPA.toFixed(2)}</h5>
           <button
             onClick={
-              campus
-                ? () => deregisterStudent(student.id)
-                : () => deleteStudent(student.id)
+              campusId
+                ? () => deregisterStudent(studentId)
+                : () => deleteStudent(studentId)
             }
           >
-            {campus ? 'Deregister' : 'Delete'}
+            {campusId ? 'Deregister' : 'Delete'}
           </button>
         </div>
       </div>
@@ -40,13 +41,15 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { history, campus } = ownProps;
+  const {
+    campusId,
+    pageDetail: { page, sort, size },
+  } = ownProps;
   return {
     deleteStudent: (studentId) => {
-      dispatch(deleteStudent(studentId, history));
+      dispatch(deleteStudent({ studentId, sort, page, size }));
     },
     deregisterStudent: (studentId) => {
-      const { id: campusId } = campus;
       dispatch(deregisterStudent(studentId, campusId));
     },
   };

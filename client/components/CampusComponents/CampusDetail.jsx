@@ -2,51 +2,49 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCampusDetail } from '../../store/campus/campusDetail';
-import deleteCampus from '../utils/deleteCampus';
+import deleteCampus from '../../store/campus/deleteCampus';
 import { fetchCampusStudents } from '../../store/campus/campusStudents';
 import ListNav from '../NavComponents/ListNav.jsx';
 import StudentCard from '../StudentComponents/StudentCard.jsx';
+import StudentList from '../StudentComponents/StudentList.jsx';
 
 class CampusDetail extends Component {
   componentDidMount() {
-    const { id } = this.props;
-    this.props.fetchCampusDetail(id);
-    this.props.fetchCampusStudents({ id, page, size, sortStudentsBy });
+    const { campusId, sort, size, page } = this.props;
+    this.props.fetchCampusDetail(campusId);
   }
-  componentDidUpdate({ campusDetail: prevCampusDetail, id: prevId }) {
-    const { id, campusDetail } = this.props;
+  componentDidUpdate({
+    campusDetail: prevCampusDetail,
+    campusId: prevCampusId,
+  }) {
+    const { campusId, campusDetail } = this.props;
     const check1 = campusDetail.students ? campusDetail.students.length : -1;
     const check2 = prevCampusDetail.students
       ? prevCampusDetail.students.length
       : -1;
-    if (check1 !== check2 || id !== prevId) {
-      this.props.fetchCampusDetail(id);
+    if (check1 !== check2 || campusId !== prevCampusId) {
+      this.props.fetchCampusDetail(campusId);
     }
   }
   sortStudents = (type) => {
-    const { id } = this.props;
-    this.props.fetchCampusStudents(id, type);
+    const { campusId } = this.props;
+    this.props.fetchCampusStudents(campusId, type);
   };
   render() {
     const {
       campusDetail,
       history,
       deleteCampus,
-      fetchCampusDetail,
-      id: campusId,
+      sort,
+      page,
+      size,
     } = this.props;
+    const campusId = campusDetail.campusId || '';
     const name = campusDetail.name || 'Loading Campus . . . ';
     const imageURL = campusDetail.imageURL || '';
     const address = campusDetail.address || '';
     const description = campusDetail.description || '';
-    const students = campusDetail.students || [];
-    const { page } = this.props.match.params;
-    const listSize = 10;
-    const currList = students.slice(
-      page * listSize,
-      page * listSize + listSize
-    );
-    const maxPage = Math.ceil(students.length / listSize) - 1;
+    const students = campusDetail.students || 0;
     return (
       <div>
         {campusDetail === '' ? (
@@ -77,36 +75,16 @@ class CampusDetail extends Component {
                   Delete
                 </button>
               </div>
-              <div>
-                <label htmlFor="student-sort">
-                  <div>Sort Students By:</div>
-                  <div>
-                    <button onClick={() => this.sortStudents('lastName')}>
-                      Last Name
-                    </button>
-                    <button onClick={() => this.sortStudents('GPA')}>
-                      GPA
-                    </button>
-                  </div>
-                </label>
-              </div>
             </div>
             <div className="campus-detail-list">
-              {students.length ? (
-                <div className="list-parent">
-                  <ListNav page={page} maxPage={maxPage} />
-                  <div className="student-list">
-                    {currList.map((student) => (
-                      <StudentCard
-                        key={student.id}
-                        history={history}
-                        student={student}
-                        campus={campusDetail}
-                      />
-                    ))}
-                  </div>
-                  <ListNav page={page} maxPage={maxPage} />
-                </div>
+              {students ? (
+                <StudentList
+                  campusId={campusId}
+                  history={history}
+                  sort={sort}
+                  page={page}
+                  size={size}
+                />
               ) : (
                 'This campus does not have any students'
               )}
@@ -121,17 +99,15 @@ class CampusDetail extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { campusDetail } = state;
   const { history } = ownProps;
-  const { id } = ownProps.match.params;
-  return { campusDetail, id, history };
+  const { campusId, sort, page, size } = ownProps.match.params;
+  return { campusDetail, campusId, history, sort, page, size };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
-    fetchCampusDetail: (id) => dispatch(fetchCampusDetail(id)),
-    fetchCampusStudents: (id, sortStudentsBy = 'lastName') =>
-      dispatch(fetchCampusStudents(id, sortStudentsBy, history)),
-    deleteCampus: (id) => dispatch(deleteCampus(id, history)),
+    fetchCampusDetail: (campusId) => dispatch(fetchCampusDetail(campusId)),
+    deleteCampus: (campusId) => dispatch(deleteCampus(campusId, history)),
   };
 };
 

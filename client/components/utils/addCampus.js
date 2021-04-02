@@ -5,8 +5,8 @@ import axios from 'axios';
 export default (newCampus, history) => {
   axios
     .post('/api/campus', newCampus)
-    .then(() => {
-      history.push('/campus');
+    .then(({ data: { campusId } }) => {
+      history.push(`/campus/${campusId}`);
     })
     .catch(console.error);
 };

@@ -8,8 +8,8 @@ const ListNav = ({
   nextPage,
   goToPage,
   sortFunc,
-  sortType1,
-  sortType2,
+  sortOption,
+  sortLabel,
 }) => {
   return (
     <div className="list-nav">
@@ -47,21 +47,12 @@ const ListNav = ({
         </label>
       </div>
       <div>
-        <label>
-          <p>Sort: </p>
-          <button
-            className="pagination-button"
-            onClick={() => sortFunc(sortType1)}
-          >
-            {sortType1}
-          </button>
-          <button
-            className="pagination-button"
-            onClick={() => sortFunc(sortType2)}
-          >
-            {sortType2}
-          </button>
-        </label>
+        <button
+          className="pagination-button"
+          onClick={() => sortFunc(sortOption)}
+        >
+          Sort By {sortLabel}
+        </button>
       </div>
       <div>
         {page * 1 < maxPage ? (

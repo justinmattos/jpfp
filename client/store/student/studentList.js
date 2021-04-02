@@ -1,19 +1,20 @@
 import axios from 'axios';
+import { SET_CAMPUS_STUDENTS } from '../campus/campusStudents';
 import { setStudentDetail } from './studentDetail';
 
 const SET_STUDENT_LIST = 'SET_STUDENT_LIST';
 
-export const setStudentList = (studentList) => {
+export const setStudentList = (students) => {
   return {
     type: SET_STUDENT_LIST,
-    studentList,
+    students,
   };
 };
 
-export const fetchStudentList = () => {
+export const fetchStudentList = ({ sort, page, size }) => {
   return (dispatch) => {
     axios
-      .get('/api/studentList')
+      .get(`/api/student/${sort}/${page}/${size}`)
       .then(({ data }) => {
         dispatch(setStudentDetail({}));
         dispatch(setStudentList(data));
@@ -25,7 +26,8 @@ export const fetchStudentList = () => {
 const initialState = [];
 
 export default (state = initialState, action) => {
-  const { type, studentList } = action;
-  if (type === SET_STUDENT_LIST) return studentList;
+  const { type, students } = action;
+  if (type === SET_STUDENT_LIST || type === SET_CAMPUS_STUDENTS)
+    return students;
   else return state;
 };

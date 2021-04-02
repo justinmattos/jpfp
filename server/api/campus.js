@@ -1,4 +1,5 @@
-const { Router, json, urlencoded } = require('express');
+const { Router, json } = require('express');
+const { literal } = require('sequelize');
 const {
   models: { Campus, Student },
 } = require('../db');
@@ -9,53 +10,87 @@ const router = Router();
 
 router.use(json({ strict: false }));
 
-//GET /api/campus/:page/:size/:sort
-router.get('/:page/:size/:sort', (req, res, next) => {
-  const { page, size, sort } = req.params;
+//GET /api/campus/all
+router.get('/all', (req, res, next) => {
+  Campus.findAll({
+    attributes: {
+      include: ['name'],
+    },
+    order: ['name'],
+  })
+    .then((data) => res.send(data))
+    .catch(next);
+});
+
+//GET /api/campus/:sort/:page/:size
+router.get('/:sort/:page/:size', (req, res, next) => {
+  const { sort, page, size } = req.params;
   const offset = page * size - size,
     limit = size;
-  let currentList = [],
-    maxPage = 0;
-  Campus.count()
-    .then((numberOfCampuses) => {
-      maxPage = Math.ceil(numberOfCampuses / size);
-      return Campus.findAll({
-        order: [sort],
-        attributes: { exclude: ['address', 'description'] },
-        offset,
-        limit,
-      });
-    })
-    .then((data) => {
-      currentList = data;
-      return Promise.all(
-        currentList.map(({ campusId }) => {
-          return Student.count({ where: { campusId } });
-        })
-      );
-    })
-    .then((data) => {
-      data.forEach((val, idx) => {
-        currentList[idx] = { ...currentList[idx].dataValues, students: val };
-      });
-      res.send({ currentList, maxPage });
+  Campus.findAndCountAll({
+    attributes: {
+      exclude: ['address', 'description'],
+      include: [
+        [
+          literal(`(
+                SELECT COUNT(*)
+                FROM students
+                WHERE
+                students."campusId" = campuses."campusId"
+                )`),
+          'students',
+        ],
+      ],
+    },
+    order: [
+      sort === 'sortByStudents'
+        ? [literal('students'), 'DESC']
+        : ['name', 'ASC'],
+    ],
+    offset,
+    limit,
+  })
+    .then(({ count, rows }) => {
+      const maxPage = Math.ceil(count / size);
+      res.send({ currentList: rows, maxPage });
     })
     .catch(next);
 });
 
 //POST /api/campus
 router.post('/', (req, res, next) => {
-  const campus = new Campus(req.body);
+  const { name, address1, address2, imageURL, description } = req.body;
+  const campus = new Campus({
+    name,
+    address1,
+    address2,
+    imageURL,
+    description,
+  });
   campus
     .save()
-    .then(() => res.sendStatus(201))
+    .then((data) => res.status(201).send(data))
     .catch(next);
 });
 
 //GET /api/campus/:campusId
 router.get('/:campusId', (req, res, next) => {
   const { campusId } = req.params;
-  Campus.findByPk(campusId)
+  Campus.findByPk(campusId, {
+    attributes: {
+      include: [
+        [
+          literal(`(
+        SELECT COUNT(*)
+        FROM students
+        WHERE
+        students."campusId" = campuses."campusId"
+      )`),
+          'students',
+        ],
+      ],
+    },
+  })
     .then((data) => res.send(data))
     .catch(next);
 });
@@ -82,13 +117,23 @@ router.delete('/:campusId', (req, res, next) => {
     .catch(next);
 });
 
-//GET /api/campus/:campusId/students/:page/:size/:sort
-router.get('/:campusId/students/:page/:size/:sort', (req, res, next) => {
+//GET /api/campus/:campusId/students/:sort/:page/:size
+router.get('/:campusId/students/:sort/:page/:size', (req, res, next) => {
   const { campusId, page, size, sort } = req.params;
   const offset = page * size - size,
     limit = size;
-  Student.findAll({ where: { campusId }, offset, limit, order: [sort] })
-    .then((students) => res.send(students))
+  console.log(sort);
+  Student.findAndCountAll({
+    where: { campusId },
+    offset,
+    limit,
+    order:
+      sort === 'sortByName' ? ['lastName', 'firstName'] : [['GPA', 'DESC']],
+  })
+    .then(({ count, rows }) => {
+      const maxPage = Math.ceil(count / size);
+      res.send({ currentList: rows, maxPage });
+    })
     .catch(next);
 });
 

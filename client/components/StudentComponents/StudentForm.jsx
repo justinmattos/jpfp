@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCampusList } from '../../store/campus/campusList';
+import { fetchAllCampus } from '../../store/campus/campusList';
 import addStudent from '../utils/addStudent';
 import editStudent from '../utils/editStudent';
 import { fetchStudentDetail } from '../../store/student/studentDetail';
 
 class StudentForm extends Component {
   componentDidMount() {
-    const { id, editMode } = this.props;
+    const { studentId, editMode } = this.props;
     if (editMode) {
-      this.props.fetchStudentDetail(id);
+      this.props.fetchStudentDetail(studentId);
     }
-    this.props.fetchCampusList();
+    this.props.fetchAllCampus();
   }
 
   getFormValues = () => {
@@ -25,8 +25,7 @@ class StudentForm extends Component {
       'campusId',
     ].reduce((acc, val) => {
       const currEl = document.querySelector(`#${val}`);
-      if (!currEl.value) {
-        console.log(currEl);
+      if (!currEl.value && val !== 'campusId') {
         currEl.parentNode.className = 'invalid';
         validForm = false;
       } else {
@@ -35,6 +34,7 @@ class StudentForm extends Component {
       return acc;
     }, {});
     if (validForm) {
+      console.log(formData);
       return formData;
     } else {
       return validForm;
@@ -42,12 +42,12 @@ class StudentForm extends Component {
   };
 
   formSubmit = (ev) => {
-    const { editMode, id } = this.props;
+    const { editMode, studentId } = this.props;
     ev.preventDefault();
     const formData = this.getFormValues();
     if (formData) {
       if (editMode) {
-        this.props.editStudent(formData, id);
+        this.props.editStudent(formData, studentId);
       } else {
         this.props.addStudent(formData);
       }
@@ -58,14 +58,12 @@ class StudentForm extends Component {
 
   render() {
     const { studentDetail, campusList, editMode } = this.props;
-    console.log(studentDetail);
     const firstName = studentDetail.firstName || '';
     const lastName = studentDetail.lastName || '';
     const email = studentDetail.email || '';
     const imageURL = studentDetail.imageURL || '';
     const GPA = studentDetail.GPA || '';
     const campus = studentDetail.campus || '';
-    console.log(!!campus);
     return (
       <form className="student-form form" onSubmit={this.formSubmit}>
         <h2>{editMode ? 'Edit' : 'Add a'} Student</h2>
@@ -102,18 +100,19 @@ class StudentForm extends Component {
             {!!campus ? (
               ''
             ) : (
-              <option key="0" value={null} selected>
+              <option key="0" value="" selected>
                 -- Select a Campus (not required) --
               </option>
             )}
             {campusList.map((campusOption) => {
+              const { name, campusId } = campusOption;
               return (
                 <option
-                  key={campusOption.id}
-                  value={campusOption.id}
-                  selected={campusOption.id === campus.id ? true : false}
+                  key={campusId}
+                  value={campusId}
+                  selected={campusId === campus.campusId ? true : false}
                 >
-                  {campusOption.name}
+                  {name}
                 </option>
               );
             })}
@@ -126,26 +125,26 @@ class StudentForm extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { id } = ownProps.match.params;
+  const { studentId } = ownProps.match.params;
   const { studentDetail, campusList } = state;
-  const editMode = !!id;
-  return { studentDetail, campusList, editMode, id };
+  const editMode = !!studentId;
+  return { studentDetail, campusList, editMode, studentId };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
     addStudent: (newStudent) => {
-      dispatch(addStudent(newStudent, history));
+      addStudent(newStudent, history);
     },
     editStudent: (updatedStudent, studentId) => {
-      dispatch(editStudent(updatedStudent, studentId, history));
+      editStudent(updatedStudent, studentId, history);
     },
-    fetchStudentDetail: (id) => {
-      dispatch(fetchStudentDetail(id));
+    fetchStudentDetail: (studentId) => {
+      dispatch(fetchStudentDetail(studentId));
     },
-    fetchCampusList: () => {
-      dispatch(fetchCampusList());
+    fetchAllCampus: () => {
+      dispatch(fetchAllCampus());
     },
   };
 };

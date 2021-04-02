@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import campusList, { fetchCampusList } from '../../store/campus/campusList';
+import { fetchCampusList } from '../../store/campus/campusList';
 import ListNav from '../NavComponents/ListNav.jsx';
 import CampusCard from './CampusCard.jsx';
 
@@ -10,9 +10,9 @@ class CampusList extends Component {
     const { page, size, sort } = this.props;
     this.props.fetchCampusList({ page, size, sort });
   }
-  componentDidUpdate({ page: prevPage }) {
+  componentDidUpdate({ page: prevPage, sort: prevSort }) {
     const { page, size, sort } = this.props;
-    if (prevPage !== page) {
+    if (prevPage !== page || prevSort !== sort) {
       this.props.fetchCampusList({ page, size, sort });
     }
   }
@@ -26,15 +26,22 @@ class CampusList extends Component {
   };
   goToPage = (newPage) => {
     const { size, sort, history } = this.props;
-    history.push(`/campus/all/${newPage}/${size}/${sort}`);
+    history.push(`/campus/all/${sort}/${newPage}/${size}`);
   };
-  sortFunc = (sortType) => {};
+  sortFunc = (sortType) => {
+    const { history } = this.props;
+    history.push(`/campus/all/${sortType}/1/10`);
+  };
   render() {
     const {
       campusList: { currentList, maxPage },
       history,
       page,
+      sort,
+      size,
     } = this.props;
+    const sortOption = sort === 'sortByName' ? 'sortByStudents' : 'sortByName';
+    const sortLabel = sortOption.slice(6);
     const CampusListNav = () => {
       return (
         <ListNav
@@ -44,8 +51,8 @@ class CampusList extends Component {
           prevPage={this.prevPage}
           goToPage={this.goToPage}
           sortFunc={this.sortFunc}
-          sortType1="Name"
-          sortType2="Students"
+          sortOption={sortOption}
+          sortLabel={sortLabel}
         />
       );
     };
@@ -55,7 +62,7 @@ class CampusList extends Component {
           <div className="list-parent">
             <h2>
               Campus List
-              <Link to="./add">
+              <Link to="/campus/add">
                 <button>Add Campus</button>
               </Link>
             </h2>
@@ -66,6 +73,7 @@ class CampusList extends Component {
                   <CampusCard
                     campus={campus}
                     history={history}
+                    pageDetail={{ sort, page, size }}
                     key={campus.campusId}
                   />
                 );

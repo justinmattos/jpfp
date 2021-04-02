@@ -9,10 +9,10 @@ export const setStudentDetail = (student) => {
   };
 };
 
-export const fetchStudentDetail = (id) => {
+export const fetchStudentDetail = (studentId) => {
   return (dispatch) => {
     axios
-      .get(`/api/studentList/student/${id}`)
+      .get(`/api/student/${studentId}`)
       .then(({ data }) => {
         dispatch(setStudentDetail(data));
       })

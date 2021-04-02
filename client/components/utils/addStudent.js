@@ -4,9 +4,9 @@ import axios from 'axios';
 
 export default (newStudent, history) => {
   axios
-    .post('/api/studentList', newStudent)
-    .then(() => {
-      history.push('/studentList/0');
+    .post('/api/student', newStudent)
+    .then(({ data }) => {
+      history.push(`/student/${data.studentId}`);
     })
     .catch(console.error);
 };

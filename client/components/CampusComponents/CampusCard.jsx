@@ -1,31 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import deleteCampus from '../utils/deleteCampus';
+import deleteCampus from '../../store/campus/deleteCampus';
 
 class CampusCard extends Component {
   linkToCampus = (ev) => {
-    const { campus, history } = this.props;
+    const {
+      campus: { campusId },
+      history,
+    } = this.props;
     if (ev.target.tagName !== 'BUTTON') {
-      history.push(`/campus/${campus.id}?page=0&size=20&sort=lastName`);
+      history.push(`/campus/${campusId}/sortByName/1/10`);
     }
   };
   render() {
     const { campus, student, deleteCampus } = this.props;
-    const students = campus.students || '';
+    const { campusId, imageURL, name, students } = campus;
     return (
       <div className="campus-card-wrapper" onClick={this.linkToCampus}>
         <div className="campus-card">
-          <img src={campus.imageURL} />
+          <img src={imageURL} />
           <div className="campus-card-detail">
             <div>
-              <h4>{campus.name}</h4>
-              <h5>{students.length} Students</h5>
+              <h4>{name}</h4>
+              <h5>{students} Students</h5>
             </div>
             <div>
               {student ? (
                 ''
               ) : (
-                <button onClick={() => deleteCampus(campus.id)}>Delete</button>
+                <button onClick={() => deleteCampus(campusId)}>Delete</button>
               )}
             </div>
           </div>
@@ -40,10 +43,13 @@ const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
-  const { history } = ownProps;
+  const {
+    pageDetail: { page, sort, size },
+  } = ownProps;
   return {
-    deleteCampus: (id) => {
-      dispatch(deleteCampus(id, history));
+    deleteCampus: (campusId) => {
+      console.log('Deleting campus ', campusId);
+      dispatch(deleteCampus({ campusId, sort, page, size }));
     },
   };
 };

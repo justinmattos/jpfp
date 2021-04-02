@@ -19,17 +19,23 @@ class App extends Component {
         </div>
         <div id="content">
           <Switch>
-            <Route component={CampusForm} path="/campus/:id/edit" />
+            <Route component={CampusForm} path="/campus/:campusId/edit" />
             <Route component={CampusForm} path="/campus/add" />
             <Route
               component={CampusList}
-              path="/campus/all/:page/:size/:sort"
+              path="/campus/all/:sort/:page/:size"
             />
-            <Route component={CampusDetail} path="/campus/:id" />
-            <Route component={StudentForm} path="/student/:id/edit" />
-            <Route component={StudentDetail} path="/student/:id" />
+            <Route
+              component={CampusDetail}
+              path="/campus/:campusId/:sort/:page/:size"
+            />
+            <Route component={StudentForm} path="/student/:studentId/edit" />
             <Route component={StudentForm} path="/student/add" />
-            <Route component={StudentList} path="/student" exact />
+            <Route
+              component={StudentList}
+              path="/student/all/:sort/:page/:size"
+            />
+            <Route component={StudentDetail} path="/student/:studentId" />
             <Route component={Home} />
           </Switch>
         </div>

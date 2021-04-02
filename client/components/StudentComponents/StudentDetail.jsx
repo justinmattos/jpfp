@@ -1,54 +1,46 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { fetchCampusList } from '../../store/campus/campusList';
+import { fetchAllCampus } from '../../store/campus/campusList';
 import { fetchStudentDetail } from '../../store/student/studentDetail';
-import deleteStudent from '../utils/deleteStudent';
+import deleteStudent from '../../store/student/deleteStudent';
 import CampusCard from '../CampusComponents/CampusCard.jsx';
 import { Link } from 'react-router-dom';
 import editStudent from '../utils/editStudent';
 
 class StudentDetail extends Component {
   componentDidMount() {
-    const { id } = this.props;
-    this.props.fetchStudentDetail(id);
-    this.props.fetchCampusList();
+    const { studentId } = this.props;
+    this.props.fetchStudentDetail(studentId);
+    this.props.fetchAllCampus();
   }
 
   componentDidUpdate({
     studentDetail: { campusId: prevCampusId },
-    id: prevId,
+    studentId: prevStudentId,
   }) {
     const {
-      id,
+      studentId,
       studentDetail: { campusId },
     } = this.props;
-    if (id !== prevId || campusId !== prevCampusId) {
-      this.props.fetchStudentDetail(id);
+    if (studentId !== prevStudentId || campusId !== prevCampusId) {
+      this.props.fetchStudentDetail(studentId);
     }
   }
-
-  changeCampus = (ev) => {
-    const { id, studentDetail } = this.props;
-    const newCampusId = document.querySelector('#campus-select').value;
-    const updatedStudent = { ...studentDetail, campusId: newCampusId };
-    delete updatedStudent.fullName;
-    this.props.editStudent(updatedStudent, id);
-  };
 
   render() {
     const { studentDetail, history, deleteStudent } = this.props;
     const fullName = studentDetail.fullName || 'Loading Student';
     const imageURL = studentDetail.imageURL || '';
-    const GPA = studentDetail.GPA || '';
+    const GPA = studentDetail.GPA || 0;
     const email = studentDetail.email || '';
     const campus = studentDetail.campus || '';
-    const { campusList } = this.props;
+    const studentId = studentDetail.studentId || '';
     return (
       <div>
         {studentDetail === '' ? (
           <div>
             <h2>Sorry, it seems that student is not in the database</h2>
-            <Link to="/studentList/0">
+            <Link to="/student/all/sortByName/1/20">
               <button>Return to All Students</button>
             </Link>
           </div>
@@ -59,15 +51,13 @@ class StudentDetail extends Component {
               <div>
                 <h2>{fullName}</h2>
                 <p>Email: {email}</p>
-                <p>GPA: {GPA}</p>
+                <p>GPA: {GPA.toFixed(2)}</p>
               </div>
               <div>
-                <Link to={`/studentList/student/${studentDetail.id}/edit`}>
+                <Link to={`/student/${studentId}/edit`}>
                   <button>Edit</button>
                 </Link>
-                <button onClick={() => deleteStudent(studentDetail.id)}>
-                  Delete
-                </button>
+                <button onClick={() => deleteStudent(studentId)}>Delete</button>
               </div>
               <div>
                 {campus
@@ -75,7 +65,12 @@ class StudentDetail extends Component {
                   : 'This student is not registered to a campus'}
               </div>
               {campus ? (
-                <CampusCard campus={campus} history={history} student />
+                <CampusCard
+                  campus={campus}
+                  history={history}
+                  pageDetail={{ sort: null, page: null, size: null }}
+                  student
+                />
               ) : (
                 ''
               )}
@@ -90,21 +85,24 @@ class StudentDetail extends Component {
 const mapStateToProps = (state, ownProps) => {
   const { studentDetail, campusList } = state;
   const { history } = ownProps;
-  const { id } = ownProps.match.params;
-  return { studentDetail, campusList, id, history };
+  const { studentId } = ownProps.match.params;
+  return { studentDetail, campusList, studentId, history };
 };
 
 const mapDispatchToProps = (dispatch, ownProps) => {
   const { history } = ownProps;
   return {
-    fetchStudentDetail: (id) => {
-      dispatch(fetchStudentDetail(id));
+    fetchStudentDetail: (studentId) => {
+      dispatch(fetchStudentDetail(studentId));
     },
-    fetchCampusList: () => {
-      dispatch(fetchCampusList());
+    fetchAllCampus: () => {
+      dispatch(fetchAllCampus());
     },
-    deleteStudent: (id) => {
-      dispatch(deleteStudent(id, history));
+    deleteStudent: (studentId) => {
+      dispatch(
+        deleteStudent({ studentId, sort: 'sortByName', page: 1, size: 20 })
+      );
+      history.push(`/student/all/sortByName/1/20`);
     },
     editStudent: (updatedStudent, studentId) => {
       dispatch(editStudent(updatedStudent, studentId, history));

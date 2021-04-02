@@ -1,4 +1,5 @@
 const { Router, json } = require('express');
+const { literal } = require('sequelize');
 const {
   models: { Campus, Student },
 } = require('../db');
@@ -9,30 +10,43 @@ const router = Router();
 
 router.use(json({ strict: false }));
 
-//GET /api/student
-router.get('/', (req, res, next) => {
-  Student.findAll({
+//GET /api/student/:sort/:page/:size
+router.get('/:sort/:page/:size', (req, res, next) => {
+  const { sort, page, size } = req.params;
+  const offset = page * size - size,
+    limit = size;
+  Student.findAndCountAll({
     include: { model: Campus, attributes: ['name'] },
     attributes: {
-      exclude: ['email', 'GPA', 'campusId'],
+      exclude: ['email', 'campusId'],
     },
-    order: ['lastName', 'firstName'],
+    order: sort === 'sortByGPA' ? [['GPA', 'DESC']] : ['lastName', 'firstName'],
+    offset,
+    limit,
   })
-    .then((data) => res.send(data))
+    .then(({ count, rows }) => {
+      const maxPage = Math.ceil(count / size);
+      res.send({ currentList: rows, maxPage });
+    })
     .catch(next);
 });
 
 //POST /api/student
 router.post('/', (req, res, next) => {
-  const student = new Student(req.body);
+  const { firstName, lastName, email, imageURL, GPA, campusId } = req.body;
+  const student = new Student({ firstName, lastName, imageURL, GPA, email });
+  if (!!campusId) {
+    student.campusId = campusId;
+  }
   student
     .save()
-    .then(() => res.sendStatus(201))
+    .then((data) => res.status(201).send(data))
     .catch(next);
 });
 
 //PUT /api/student/deregister/:studentId/:campusId
 router.put('/deregister/:studentId/:campusId', (req, res, next) => {
+  //Something is wrong with this now that CampusDetail implements StudentList
   const { studentId, campusId } = req.params;
   console.log(studentId, campusId);
   Campus.findByPk(campusId)
@@ -44,12 +58,24 @@ router.put('/deregister/:studentId/:campusId', (req, res, next) => {
 });
 
 //GET /api/student/:studentId
-router.get('/student/:studentId', (req, res, next) => {
+router.get('/:studentId', (req, res, next) => {
   const { studentId } = req.params;
   Student.findByPk(studentId, {
     include: {
       model: Campus,
-      include: { model: Student, attributes: ['id'] },
+      attributes: {
+        include: [
+          [
+            literal(`(
+            SELECT COUNT(*)
+            FROM students
+            WHERE
+            students."campusId" = campus."campusId"
+          )`),
+            'students',
+          ],
+        ],
+      },
     },
   })
     .then((data) => res.send(data))
@@ -57,7 +83,7 @@ router.get('/student/:studentId', (req, res, next) => {
 });
 
 //PUT /api/student/:studentId
-router.put('/student/:studentId', (req, res, next) => {
+router.put('/:studentId', (req, res, next) => {
   const { studentId } = req.params;
   const updatedStudent = req.body;
   Student.update(updatedStudent, { where: { studentId } })
@@ -68,7 +94,7 @@ router.put('/student/:studentId', (req, res, next) => {
 });
 
 //DELETE /api/student/:studentId
-router.delete('/student/:studentId', (req, res, next) => {
+router.delete('/:studentId', (req, res, next) => {
   const { studentId } = req.params;
   Student.findByPk(studentId)
     .then((student) => {

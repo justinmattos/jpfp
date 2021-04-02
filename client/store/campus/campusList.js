@@ -13,9 +13,20 @@ export const setCampusList = (campusList) => {
 export const fetchCampusList = ({ page, size, sort }) => {
   return (dispatch) => {
     axios
-      .get(`/api/campus/${page}/${size}/${sort}`)
+      .get(`/api/campus/${sort}/${page}/${size}`)
       .then(({ data }) => {
         dispatch(setCampusDetail({}));
+        dispatch(setCampusList(data));
+      })
+      .catch(console.error);
+  };
+};
+
+export const fetchAllCampus = () => {
+  return (dispatch) => {
+    axios
+      .get('/api/campus/all')
+      .then(({ data }) => {
         dispatch(setCampusList(data));
       })
       .catch(console.error);
