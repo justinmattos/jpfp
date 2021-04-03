@@ -26,7 +26,9 @@ const syncAndSeed = () => {
         });
       });
     const seedStudents = seedCampus.map((campus) => {
-      const seedCampusStudents = Array(Math.ceil(Math.random() * 249) + 1)
+      const seedCampusStudents = Array(
+        100 + Math.round(25 - Math.random() * 50)
+      )
         .fill('')
         .map((e) => {
           const fakeFirstName = faker.name.firstName();

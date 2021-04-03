@@ -7,9 +7,9 @@
     "test": "jest",
     "test:watch": "jest --watch?",
     "seed": "node server/db/seed.js",
-    "start": "node server/db/seed.js && node server/index.js",
+    "start": "node server/index.js",
     "start:dev": "nodemon server/index.js",
-    "build": "webpack",
+    "build": "webpack & node server/db/seed.js",
     "build:dev": "webpack --watch --mode=development"
   },
   "keywords": [],
