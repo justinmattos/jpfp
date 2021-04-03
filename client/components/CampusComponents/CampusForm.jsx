@@ -5,69 +5,152 @@ import editCampus from '../utils/editCampus';
 import { fetchCampusDetail } from '../../store/campus/campusDetail';
 
 class CampusForm extends Component {
+  state = {
+    formData: {
+      name: '',
+      address1: '',
+      address2: '',
+      imageURL: '',
+      description: '',
+    },
+  };
+
   componentDidMount() {
-    const { campusId, editMode } = this.props;
+    const {
+      editMode,
+      campusDetail: { name, address1, address2, imageURL, description },
+      fetchCampusDetail,
+      campusId,
+    } = this.props;
     if (editMode) {
-      this.props.fetchCampusDetail(campusId);
+      this.setState({
+        formData: { name, address1, address2, imageURL, description },
+      });
+      fetchCampusDetail(campusId);
     }
   }
 
-  getFormValues = () => {
-    return ['name', 'address1', 'address2', 'imageURL', 'description'].reduce(
-      (acc, val) => {
-        acc[val] = document.querySelector(`#${val}`).value;
-        return acc;
-      },
-      {}
-    );
+  componentDidUpdate = ({ campusDetail: { campusId: prevCampusId } }) => {
+    const { campusDetail } = this.props;
+    const {
+      campusId,
+      name,
+      address1,
+      address2,
+      imageURL,
+      description,
+    } = campusDetail;
+    if (campusId !== prevCampusId) {
+      this.setState({
+        formData: { name, address1, address2, imageURL, description },
+      });
+    }
+  };
+
+  formChange = ({ target: { name, value, parentNode } }) => {
+    if (name !== 'imageURL' && name !== 'description') {
+      if (!value) {
+        parentNode.className = 'invalid';
+      } else {
+        parentNode.className = '';
+      }
+    }
+    this.setState({ formData: { [name]: value || '' } });
   };
 
   formSubmit = (ev) => {
-    const { editMode, campusId } = this.props;
     ev.preventDefault();
-    if (editMode) {
-      this.props.editCampus(this.getFormValues(), campusId);
+    const { editMode, campusId, editCampus, addCampus } = this.props;
+    const { formData } = this.state;
+    let validForm = true;
+    for (const key in formData) {
+      if (key !== 'imageURL' && key !== 'description') {
+        if (!formData[key]) {
+          document.querySelector(`#${key}`).parentNode.className = 'invalid';
+          validForm = false;
+        }
+      } else {
+        if (!formData[key]) {
+          formData[key] = undefined;
+        }
+      }
+    }
+    if (validForm) {
+      if (editMode) {
+        editCampus(formData, campusId);
+      } else {
+        addCampus(formData);
+      }
     } else {
-      this.props.addCampus(this.getFormValues());
+      alert('Please fill all required fields');
     }
   };
 
   render() {
-    const { campusDetail, editMode } = this.props;
-    const name = campusDetail.name || '';
-    const address = campusDetail.address || '';
-    const [address1, address2] = address.split('\n');
-    const imageURL = campusDetail.imageURL || '';
-    const description = campusDetail.description || '';
+    const { editMode } = this.props;
+    const {
+      formData: { name, address1, address2, imageURL, description },
+    } = this.state;
     return (
-      <form className="form" onSubmit={this.formSubmit}>
-        <h2>{editMode ? 'Edit' : 'Add a'} Campus</h2>
-        <label htmlFor="name">
-          <p>Campus Name:</p>
-          <input id="name" type="text" defaultValue={name} />
-        </label>
-        <label htmlFor="address1">
-          <p>Campus Address Line 1:</p>
-          <input id="address1" type="text" defaultValue={address1}></input>
-        </label>
-        <label htmlFor="address2">
-          <p>Campus Address Line 2:</p>
-          <input id="address2" type="text" defaultValue={address2}></input>
-        </label>
-        <label htmlFor="imageURL">
-          <p>Campus Image URL:</p>
-          <input id="imageURL" type="url" defaultValue={imageURL}></input>
-        </label>
-        <label htmlFor="description">
-          <p>Campus Description:</p>
-          <textarea
-            id="description"
-            type="text"
-            defaultValue={description}
-          ></textarea>
-        </label>
-        <button>Submit</button>
-      </form>
+      <div>
+        <h2 className="form-title">{editMode ? 'Edit' : 'Add a'} Campus</h2>
+        <form className="form" onSubmit={this.formSubmit}>
+          <label htmlFor="name">
+            <p>Campus Name:</p>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              value={name}
+              onChange={this.formChange}
+              placeholder="Required"
+            />
+          </label>
+          <label htmlFor="address1">
+            <p>Campus Address Line 1:</p>
+            <input
+              id="address1"
+              name="address1"
+              type="text"
+              value={address1}
+              onChange={this.formChange}
+              placeholder="Required"
+            />
+          </label>
+          <label htmlFor="address2">
+            <p>Campus Address Line 2:</p>
+            <input
+              id="address2"
+              name="address2"
+              type="text"
+              value={address2}
+              onChange={this.formChange}
+              placeholder="Required"
+            />
+          </label>
+          <label htmlFor="imageURL">
+            <p>Campus Image URL:</p>
+            <input
+              id="imageURL"
+              name="imageURL"
+              type="url"
+              value={imageURL}
+              onChange={this.formChange}
+            />
+          </label>
+          <label htmlFor="description">
+            <p>Campus Description:</p>
+            <textarea
+              id="description"
+              name="description"
+              type="text"
+              value={description}
+              onChange={this.formChange}
+            ></textarea>
+          </label>
+          <button>Submit</button>
+        </form>
+      </div>
     );
   }
 }

@@ -8,146 +8,204 @@ import { fetchStudentDetail } from '../../store/student/studentDetail';
 //SOMETHING IS BROKEN HERE FOR ADD STUDENT MODE
 
 class StudentForm extends Component {
-  state = { selectValue: '' };
+  state = {
+    formData: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      imageURL: '',
+      GPA: 0,
+      campusId: '',
+    },
+  };
 
   componentDidMount() {
     const {
       studentId,
-      campusId,
+      studentDetail: { firstName, lastName, email, imageURL, GPA, campusId },
       editMode,
       fetchStudentDetail,
       fetchAllCampus,
     } = this.props;
     if (editMode) {
-      this.setState({ selectValue: campusId });
+      this.setState({
+        formData: {
+          firstName,
+          lastName,
+          email,
+          imageURL,
+          GPA,
+          campusId: campusId || '',
+        },
+      });
       fetchStudentDetail(studentId);
     }
     fetchAllCampus();
   }
 
-  componentDidUpdate({ studentDetail: { studentId: prevStudentId } }) {
+  componentDidUpdate = ({ studentDetail: { studentId: prevStudentId } }) => {
+    const { studentDetail } = this.props;
     const {
-      studentDetail: { studentId },
+      studentId,
+      firstName,
+      lastName,
+      email,
+      imageURL,
+      GPA,
       campusId,
-    } = this.props;
+    } = studentDetail;
     if (studentId !== prevStudentId) {
-      this.setState({ selectValue: campusId });
-    }
-  }
-
-  getFormValues = () => {
-    let validForm = true;
-    const formData = [
-      'firstName',
-      'lastName',
-      'email',
-      'imageURL',
-      'GPA',
-      'campusId',
-    ].reduce((acc, val) => {
-      const currEl = document.querySelector(`#${val}`);
-      if (!currEl.value && val !== 'campusId') {
-        currEl.parentNode.className = 'invalid';
-        validForm = false;
-      } else {
-        acc[val] = currEl.value;
-      }
-      return acc;
-    }, {});
-    if (validForm) {
-      return formData;
-    } else {
-      return validForm;
+      this.setState({
+        formData: {
+          firstName,
+          lastName,
+          email,
+          imageURL,
+          GPA,
+          campusId: campusId || '',
+        },
+      });
     }
   };
 
-  formSubmit = (ev) => {
-    const { editMode, studentId } = this.props;
-    ev.preventDefault();
-    const formData = this.getFormValues();
-    if (formData) {
-      if (editMode) {
-        this.props.editStudent(formData, studentId);
+  formChange = ({ target: { name, value, parentNode } }) => {
+    if (name !== 'campusId') {
+      if (value === '') {
+        parentNode.className = 'invalid';
       } else {
-        this.props.addStudent(formData);
+        parentNode.className = '';
+      }
+    }
+    this.setState({
+      ...this.state,
+      formData: { ...this.state.formData, [name]: value },
+    });
+  };
+
+  formSubmit = (ev) => {
+    ev.preventDefault();
+    const { editMode, studentId, editStudent, addStudent } = this.props;
+    const submitData = { ...this.state.formData };
+    let validForm = true;
+    for (const key in submitData) {
+      if (key !== 'campusId' && key !== 'GPA') {
+        if (!submitData[key]) {
+          document.querySelector(`#${key}`).parentNode.className = 'invalid';
+          validForm = false;
+        }
+      } else if (key === 'campusId') {
+        if (!submitData[key]) {
+          submitData[key] = undefined;
+        }
+      }
+    }
+    if (validForm) {
+      if (editMode) {
+        editStudent(submitData, studentId);
+      } else {
+        addStudent(submitData);
       }
     } else {
       alert('Please fill all required fields');
     }
   };
 
-  selectOnChange = ({ target: { value: selectValue } }) => {
-    this.setState({ selectValue });
-  };
-
   render() {
-    const {
-      studentDetail,
-      campusList,
-      editMode,
-      campus,
-      campusId,
-    } = this.props;
+    const { studentDetail, campusList, editMode, campus } = this.props;
     const { currentList } = campusList;
-    const firstName = studentDetail.firstName || '';
-    const lastName = studentDetail.lastName || '';
-    const email = studentDetail.email || '';
-    const imageURL = studentDetail.imageURL || '';
-    const GPA = studentDetail.GPA || '';
+    const {
+      formData: { firstName, lastName, email, imageURL, GPA, campusId },
+    } = this.state;
+    // const firstName = studentDetail.firstName || '';
+    // const lastName = studentDetail.lastName || '';
+    // const email = studentDetail.email || '';
+    // const imageURL = studentDetail.imageURL || '';
+    // const GPA = studentDetail.GPA || '';
     return (
-      <form className="student-form form" onSubmit={this.formSubmit}>
-        <h2>{editMode ? 'Edit' : 'Add a'} Student</h2>
-        <label htmlFor="firstName">
-          <p>Student First Name:</p>
-          <input id="firstName" type="text" defaultValue={firstName} />
-        </label>
-        <label htmlFor="lastName">
-          <p>Student Last Name:</p>
-          <input id="lastName" type="text" defaultValue={lastName} />
-        </label>
-        <label htmlFor="email">
-          <p>Student Email:</p>
-          <input id="email" type="text" defaultValue={email} />
-        </label>
-        <label htmlFor="imageURL">
-          <p>Student Image URL:</p>
-          <input id="imageURL" type="url" defaultValue={imageURL} />
-        </label>
-        <label htmlFor="GPA">
-          <p>Student GPA:</p>
-          <input
-            id="GPA"
-            type="number"
-            min="0.00"
-            max="4.00"
-            step="0.01"
-            defaultValue={GPA}
-          />
-        </label>
-        <label htmlFor="campusId">
-          <p>Campus:</p>
-          <select
-            id="campusId"
-            value={this.state.selectValue}
-            onChange={this.selectOnChange}
-          >
-            <option key="0" value="">
-              {campus
-                ? '-- Deregister Student --'
-                : '-- Select a Campus (not required) --'}
-            </option>
-            {currentList.map((campusOption) => {
-              const { name, campusId } = campusOption;
-              return (
-                <option key={campusId} value={campusId}>
-                  {name}
-                </option>
-              );
-            })}
-          </select>
-        </label>
-        <button>Submit</button>
-      </form>
+      <div>
+        <h2 className="form-title">{editMode ? 'Edit' : 'Add a'} Student</h2>
+        <form className="student-form form" onSubmit={this.formSubmit}>
+          <label htmlFor="firstName">
+            <p>Student First Name:</p>
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              value={firstName}
+              onChange={this.formChange}
+              placeholder="Required"
+            />
+          </label>
+          <label htmlFor="lastName">
+            <p>Student Last Name:</p>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              value={lastName}
+              onChange={this.formChange}
+              placeholder="Required"
+            />
+          </label>
+          <label htmlFor="email">
+            <p>Student Email:</p>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={email}
+              onChange={this.formChange}
+              placeholder="Required"
+            />
+          </label>
+          <label htmlFor="imageURL">
+            <p>Student Image URL:</p>
+            <input
+              id="imageURL"
+              name="imageURL"
+              type="url"
+              value={imageURL}
+              onChange={this.formChange}
+              placeholder="Required"
+            />
+          </label>
+          <label htmlFor="GPA">
+            <p>Student GPA:</p>
+            <input
+              id="GPA"
+              name="GPA"
+              type="number"
+              min="0.00"
+              max="4.00"
+              step="0.01"
+              value={GPA}
+              onChange={this.formChange}
+            />
+          </label>
+          <label htmlFor="campusId">
+            <p>Campus:</p>
+            <select
+              id="campusId"
+              name="campusId"
+              value={campusId}
+              onChange={this.formChange}
+            >
+              <option key="0" value="">
+                {campus ? '-- Deregister Student --' : '-- Select a Campus --'}
+              </option>
+              {currentList.map((campusOption) => {
+                const { name, campusId } = campusOption;
+                return (
+                  <option key={campusId} value={campusId}>
+                    {name}
+                  </option>
+                );
+              })}
+            </select>
+          </label>
+          <button>Submit</button>
+        </form>
+      </div>
     );
   }
 }
