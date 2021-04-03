@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { createLogger } from 'redux-logger';
+// import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 import campusList from './campus/campusList';
 import campusDetail from './campus/campusDetail';
@@ -18,8 +18,8 @@ const reducer = combineReducers({
 });
 
 const middleware = applyMiddleware(
-  thunkMiddleware,
-  createLogger({ collapsed: true })
+  thunkMiddleware
+  // createLogger({ collapsed: true })
 );
 
 const store = createStore(reducer, middleware);
