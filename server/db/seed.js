@@ -6,8 +6,9 @@ const {
 
 const syncAndSeed = () => {
   return new Promise((res, rej) => {
-    let SEED = 1729;
-    const seedCampus = Array(20)
+    let SEED = 1729,
+      num = 1;
+    const seedCampus = Array(100 + Math.round(25 - Math.random() * 50))
       .fill('')
       .map((e) => {
         const fakeCity = faker.address.city();
@@ -54,6 +55,12 @@ const syncAndSeed = () => {
             });
             return Promise.all(
               seedCampusStudents.map((student) => student.save())
+            ).then(() =>
+              console.log(
+                `Campus #${num++} seeded with ${
+                  seedCampusStudents.length
+                } students`
+              )
             );
           })
         );

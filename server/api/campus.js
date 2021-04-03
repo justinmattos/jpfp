@@ -98,8 +98,11 @@ router.get('/:campusId', (req, res, next) => {
 //PUT /api/campus/:campusId
 router.put('/:campusId', (req, res, next) => {
   const { campusId } = req.params;
-  const updatedCampus = req.body;
-  Campus.update(updatedCampus, { where: { campusId } })
+  const { name, address1, address2, imageURL, description } = req.body;
+  Campus.update(
+    { name, address1, address2, imageURL, description },
+    { where: { campusId } }
+  )
     .then(() => {
       res.sendStatus(201);
     })
@@ -109,7 +112,6 @@ router.put('/:campusId', (req, res, next) => {
 //DELETE /api/campus/:campusId
 router.delete('/:campusId', (req, res, next) => {
   const { campusId } = req.params;
-  console.log(campusId);
   Campus.findByPk(campusId)
     .then((campus) => {
       return campus.destroy();
@@ -123,7 +125,6 @@ router.get('/:campusId/students/:sort/:page/:size', (req, res, next) => {
   const { campusId, page, size, sort } = req.params;
   const offset = page * size - size,
     limit = size;
-  console.log(sort);
   Student.findAndCountAll({
     where: { campusId },
     offset,
