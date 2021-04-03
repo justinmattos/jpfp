@@ -14,11 +14,15 @@ import CampusCard from './CampusCard.jsx';
 
 class CampusList extends Component {
   componentDidMount() {
-    const { setPageDetail, fetchCampusList } = this.props;
+    const {
+      setPageDetail,
+      fetchCampusList,
+      pageDetail: { sort, page, size },
+    } = this.props;
     const initialPageDetail = {
-      sort: 'sortByName',
-      page: 1,
-      size: 10,
+      sort: sort || 'sortByName',
+      page: page || 1,
+      size: size || 10,
     };
     fetchCampusList(initialPageDetail);
     setPageDetail(initialPageDetail);

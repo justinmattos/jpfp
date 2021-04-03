@@ -68,6 +68,22 @@ button.pagination-button {
   margin: 0 0.5em 0 0;
 }
 
+.home {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+
+.home h1 {
+  margin: 0.5em 0;
+}
+
+.home p {
+  background-color: var(--second-bg-color);
+  padding: 1em;
+  border-radius: 1em;
+}
+
 .list-parent {
   display: flex;
   flex-flow: column nowrap;
@@ -136,6 +152,7 @@ button.pagination-button {
   padding: 0.25em 0;
   display: flex;
   flex-flow: row wrap;
+  width: 100%;
 }
 
 .campus-card-wrapper {
@@ -172,10 +189,18 @@ button.pagination-button {
   width: calc(100% - 0.5em);
 }
 
+.form-title {
+  text-align: center;
+  margin: 0.5em 0;
+}
+
 .form {
+  padding: 0.5em;
   display: flex;
   flex-flow: column;
   align-items: center;
+  background-color: var(--second-bg-color);
+  border-radius: 1em;
 }
 
 .form label {
@@ -197,17 +222,21 @@ button.pagination-button {
 .form select {
   width: 100%;
   flex: 4;
+  padding: 0.5em;
 }
 
-.invalid {
-  color: #76323f;
-  text-decoration: bold;
+.form button {
+  background-color: var(--card-bg-color);
+}
+
+.invalid ::placeholder {
+  color: var(--card-bg-color);
 }
 
 .invalid input,
 .invalid textarea,
 .invalid select {
-  border: #76323f solid 3px;
+  border: var(--card-bg-color) solid 3px;
 }
 
 .student-list {
